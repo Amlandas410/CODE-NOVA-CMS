@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0f172a"><meta name="description" content="CODE-NOVA CMS campus operations platform"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+  <title>{% block title %}CODE-NOVA CMS{% endblock %}</title>
+</head>
+<body data-lang="{{ session.get('lang','en') }}">
+<div class="app-shell">
+  {% if session.get('user_id') %}
+  {% if session.get('role') == 'admin' %}
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">F</div><div><strong>CODE-NOVA CMS</strong><span>Campus OS</span></div></div>
+    <div class="role-chip">ADMIN CONTROL CENTER</div>
+    <nav>
+      <a href="{{ url_for('admin.dashboard') }}" class="{% if request.endpoint=='admin.dashboard' %}active{% endif %}">⌂ <span>Overview</span></a>
+      <a href="{{ url_for('admin.requests_page') }}" class="{% if request.endpoint=='admin.requests_page' %}active{% endif %}">✓ <span>Pending Requests</span></a>
+      <a href="{{ url_for('admin.complaints') }}" class="{% if request.endpoint=='admin.complaints' %}active{% endif %}">⚙ <span>Complaint Control</span></a>
+      <a href="{{ url_for('admin.notices') }}" class="{% if request.endpoint=='admin.notices' %}active{% endif %}">! <span>Announcements</span></a>
+      <a href="{{ url_for('admin.academics') }}" class="{% if request.endpoint=='admin.academics' %}active{% endif %}">▦ <span>Academics</span></a>
+      <a href="{{ url_for('admin.finance') }}" class="{% if request.endpoint=='admin.finance' %}active{% endif %}">₹ <span>Fees & Dues</span></a>
+      <a href="{{ url_for('admin.hostel') }}" class="{% if request.endpoint=='admin.hostel' %}active{% endif %}">⌂ <span>Hostel & Visitors</span></a>
+      <a href="{{ url_for('admin.users') }}" class="{% if request.endpoint=='admin.users' %}active{% endif %}">◎ <span>Users & Access</span></a>
+    </nav>
+    <div class="sidebar-foot">Operations control · Low-bandwidth interface</div>
+  </aside>
+  {% elif session.get('role') == 'teacher' %}
+  <aside class="sidebar" id="sidebar"><div class="brand"><div class="brand-mark">F</div><div><strong>CODE-NOVA CMS</strong><span>Campus OS</span></div></div><div class="role-chip">FACULTY OPERATIONS</div><nav>
+      <a href="{{ url_for('teacher.dashboard') }}" class="{% if request.endpoint=='teacher.dashboard' %}active{% endif %}">⌂ <span>Overview</span></a>
+      <a href="{{ url_for('teacher.students') }}">◎ <span>My Students</span></a>
+      <a href="{{ url_for('teacher.attendance') }}">◷ <span>Attendance</span></a>
+      <a href="{{ url_for('teacher.timetable') }}">▦ <span>Timetable</span></a>
+      <a href="{{ url_for('teacher.class_updates') }}">↻ <span>Class Updates</span></a>
+      <a href="{{ url_for('teacher.requests_page') }}">✓ <span>Leave / Gate Requests</span></a>
+      <a href="{{ url_for('teacher.complaints') }}">⚙ <span>Service Tickets</span></a>
+      <a href="{{ url_for('teacher.notices') }}">! <span>Announcements</span></a>
+    </nav><div class="sidebar-foot">Faculty in-charge · Low-bandwidth operations</div></aside>
+  {% elif session.get('role') == 'warden' %}
+  <aside class="sidebar" id="sidebar"><div class="brand"><div class="brand-mark">F</div><div><strong>CODE-NOVA CMS</strong><span>Campus OS</span></div></div><div class="role-chip">HOSTEL WARDEN</div><nav>
+      <a href="{{ url_for('warden.dashboard') }}" class="{% if request.endpoint=='warden.dashboard' %}active{% endif %}">⌂ <span>Overview</span></a>
+      <a href="{{ url_for('warden.requests_page') }}">✓ <span>Leave / Gate Requests</span></a>
+      <a href="{{ url_for('warden.visitors') }}">⇄ <span>Visitors & Gate Logs</span></a>
+      <a href="{{ url_for('warden.rooms') }}">⌂ <span>Rooms & Assets</span></a>
+      <a href="{{ url_for('warden.complaints') }}">⚙ <span>Hostel Complaints</span></a>
+      <a href="{{ url_for('warden.mess') }}">☕ <span>Mess & Feedback</span></a>
+      <a href="{{ url_for('warden.notices') }}">! <span>Hostel Notices</span></a>
+    </nav><div class="sidebar-foot">Hostel operations · Low-bandwidth mode</div></aside>
+  {% else %}
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">F</div><div><strong>CODE-NOVA CMS</strong><span>Campus OS</span></div></div>
+    <div class="role-chip">STUDENT PORTAL</div>
+    <nav>
+      <a href="{{ url_for('student.dashboard') }}" class="{% if request.endpoint=='student.dashboard' %}active{% endif %}">⌂ <span>{{ translations[session.get('lang','en')].dashboard }}</span></a>
+      <a href="{{ url_for('student.attendance') }}" class="{% if request.endpoint=='student.attendance' %}active{% endif %}">◷ <span>{{ translations[session.get('lang','en')].attendance }}</span></a>
+      <a href="{{ url_for('student.timetable') }}" class="{% if request.endpoint=='student.timetable' %}active{% endif %}">▦ <span>{{ translations[session.get('lang','en')].timetable }}</span></a>
+      <a href="{{ url_for('student.updates') }}">↻ <span>Class Updates</span></a>
+      <a href="{{ url_for('student.requests_home') }}">✓ <span>{{ translations[session.get('lang','en')].requests }}</span></a>
+      <a href="{{ url_for('student.fees') }}">₹ <span>{{ translations[session.get('lang','en')].fees }}</span></a>
+      <a href="{{ url_for('student.complaints') }}">⚙ <span>{{ translations[session.get('lang','en')].complaints }}</span></a>
+      <a href="{{ url_for('student.hostel') }}">⌂ <span>Room & Assets</span></a>
+      <a href="{{ url_for('student.mess') }}">☕ <span>{{ translations[session.get('lang','en')].mess }}</span></a>
+      <a href="{{ url_for('student.visitors') }}">⇄ <span>{{ translations[session.get('lang','en')].visitors }}</span></a>
+      <a href="{{ url_for('student.notices') }}">! <span>{{ translations[session.get('lang','en')].notices }}</span></a>
+      <a href="{{ url_for('student.help_page') }}">? <span>Help & FAQ</span></a>
+    </nav>
+    <div class="sidebar-foot">Low-bandwidth mode · Works on basic devices</div>
+  </aside>
+  {% endif %}
+  {% endif %}
+  <main class="main">
+    {% if session.get('user_id') %}
+    <header class="topbar">
+      <button class="icon-btn mobile-only" id="menuBtn" aria-label="Open menu">☰</button>
+      <div class="crumb">{{ session.get('role','user')|title }} / <strong>{{ request.endpoint.split('.')[-1]|replace('_',' ')|title }}</strong></div>
+      <div class="top-actions">
+        {% if session.get('role') == 'student' %}<form method="post" action="{{ url_for('student.language') }}" class="lang-form"><select name="language" onchange="this.form.submit()"><option value="en" {% if session.get('lang')=='en' %}selected{% endif %}>English</option><option value="hi" {% if session.get('lang')=='hi' %}selected{% endif %}>हिन्दी</option><option value="od" {% if session.get('lang')=='od' %}selected{% endif %}>ଓଡ଼ିଆ</option></select></form>
+        <a class="icon-btn" href="{{ url_for('student.notices') }}" aria-label="Notices">🔔{% if unread and unread>0 %}<b class="badge-dot">{{ unread }}</b>{% endif %}</a>{% else %}<span class="role-chip" style="color:#536077;padding:0">LIVE OPERATIONS</span>{% endif %}
+        <a class="profile-mini" href="{% if session.get('role')=='student' %}{{ url_for('student.profile') }}{% elif session.get('role')=='admin' %}{{ url_for('admin.dashboard') }}{% elif session.get('role')=='teacher' %}{{ url_for('teacher.dashboard') }}{% else %}{{ url_for('warden.dashboard') }}{% endif %}"><span>{{ session.get('user_name','U')[0] }}</span><div><strong>{{ session.get('user_name','User') }}</strong><small>{{ session.get('user_email','') }}</small></div></a>
+        <a class="logout" href="{{ url_for('auth.logout') }}">↪ {{ translations[session.get('lang','en')].logout if session.get('role')=='student' else 'Logout' }}</a>
+      </div>
+    </header>
+    {% endif %}
+    <section class="page">
+      {% with messages=get_flashed_messages(with_categories=true) %}{% for cat,msg in messages %}<div class="flash {{ cat }}" role="status">{{ msg }} <button onclick="this.parentElement.remove()">×</button></div>{% endfor %}{% endwith %}
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+</div>
+{% if session.get('user_id') %}<button class="chat-launch" id="chatLaunch">AI</button><div class="chat-box" id="chatBox"><div class="chat-head"><strong>CODE-NOVA CMS Assist</strong><button id="chatClose">×</button></div><div class="chat-body" id="chatBody"><div class="chat-msg bot">Hi! Ask me about attendance, gate passes, fees, complaints, mess, visitors or documents.</div></div><form id="chatForm" class="chat-form"><input id="chatInput" placeholder="Ask a question…" autocomplete="off"><button>Send</button></form></div>{% endif %}
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>{% if session.get('user_id') %}<script src="{{ url_for('static', filename='js/offline-db.js') }}"></script><script src="{{ url_for('static', filename='js/offline.js') }}"></script><script>if ('serviceWorker' in navigator) { navigator.serviceWorker.register('{{ url_for('service_worker') }}').catch(console.error); }</script>{% endif %}{% block scripts %}{% endblock %}
+</body></html>

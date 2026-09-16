@@ -1,0 +1,10 @@
+{
+  "name": "CODE-NOVA CMS",
+  "short_name": "CODE-NOVA",
+  "description": "Campus operations management platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f7fb",
+  "theme_color": "#0f172a",
+  "icons": []
+}
