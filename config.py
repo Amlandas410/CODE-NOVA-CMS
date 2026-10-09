@@ -21,6 +21,7 @@ class Config:
     MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "")
     MYSQL_SSL = _env_flag("MYSQL_SSL", False)
     MYSQL_SSL_CA = os.getenv("MYSQL_SSL_CA", "")
+    SEND_FILE_MAX_AGE_DEFAULT = 0
     JSON_SORT_KEYS = False
     SESSION_COOKIE_SECURE = _env_flag("SESSION_COOKIE_SECURE", not DEBUG)
     SESSION_COOKIE_HTTPONLY = True

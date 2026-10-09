@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'code-nova-shell-v1';
+const SHELL_CACHE = 'code-nova-shell-v2';
 const PAGE_CACHE = 'code-nova-pages-v1';
 const STATIC_ASSETS = [
   '/static/css/app.css',
@@ -17,7 +17,14 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(Promise.all([
+    self.clients.claim(),
+    caches.keys().then(names => Promise.all(
+      names
+        .filter(name => name.startsWith('code-nova-shell-') && name !== SHELL_CACHE)
+        .map(name => caches.delete(name))
+    ))
+  ]));
 });
 
 self.addEventListener('message', (event) => {
@@ -44,6 +51,21 @@ async function pageRequest(request) {
   }
 }
 
+async function staticAssetRequest(request) {
+  const cache = await caches.open(SHELL_CACHE);
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      await cache.put(request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    const cached = await cache.match(request);
+    if (cached) return cached;
+    throw error;
+  }
+}
+
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
@@ -57,12 +79,6 @@ self.addEventListener('fetch', (event) => {
   }
 
   if (url.pathname.startsWith('/static/')) {
-    event.respondWith(
-      caches.match(request).then(cached => cached || fetch(request).then(response => {
-        const clone = response.clone();
-        caches.open(SHELL_CACHE).then(cache => cache.put(request, clone));
-        return response;
-      }))
-    );
+    event.respondWith(staticAssetRequest(request));
   }
 });

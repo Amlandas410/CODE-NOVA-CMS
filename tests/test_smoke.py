@@ -38,10 +38,14 @@ def test_offline_assets_are_available():
 
     response = client.get('/service-worker.js')
     assert response.status_code == 200
+    assert response.headers['Cache-Control'] == 'no-cache, max-age=0, must-revalidate'
     assert b'code-nova-pages-v1' in response.data
+    assert b'code-nova-shell-v2' in response.data
+    assert b'async function staticAssetRequest' in response.data
 
     manifest = client.get('/static/manifest.webmanifest')
     assert manifest.status_code == 200
+    assert manifest.cache_control.max_age == 0
     assert b'CODE-NOVA CMS' in manifest.data
 
 

@@ -210,7 +210,10 @@
     <script src="{{ url_for('static', filename='js/offline.js') }}"></script>
     <script>
       if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("{{ url_for('service_worker') }}").catch(console.error);
+        navigator.serviceWorker.register(
+          "{{ url_for('service_worker') }}",
+          { updateViaCache: "none" }
+        ).catch(console.error);
       }
     </script>
     {% endif %}{% block scripts %}{% endblock %}

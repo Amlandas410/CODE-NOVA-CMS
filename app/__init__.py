@@ -29,7 +29,11 @@ def create_app():
     @app.route("/service-worker.js")
     def service_worker():
         from flask import send_from_directory
-        return send_from_directory(app.static_folder, "service-worker.js", mimetype="application/javascript")
+        response = send_from_directory(
+            app.static_folder, "service-worker.js", mimetype="application/javascript"
+        )
+        response.headers["Cache-Control"] = "no-cache, max-age=0, must-revalidate"
+        return response
 
     @app.route("/")
     def index():

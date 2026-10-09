@@ -223,6 +223,8 @@ cd "D:\CMS\code_nova_cms - Copy"
 
 CODE-NOVA CMS now includes an offline-first foundation for browsers and installable PWAs. Authenticated devices cache the pages they visit, keep POST form changes in an IndexedDB outbox while offline, and automatically replay those changes when internet connectivity returns. A visible Online/Offline/Sync status indicator is shown while the user is signed in.
 
+Static files are revalidated with the server on normal page loads, and the service worker uses the latest server copy when online while retaining a fallback for offline use. After editing frontend files, use a normal browser refresh; a forced refresh (Ctrl+F5) should not be needed. On Windows, restart the running app after changing Python backend files.
+
 ### Local test
 
 1. Copy `.env.example` to `.env` and set the local MySQL credentials. For plain HTTP localhost development, use `SESSION_COOKIE_SECURE=0`.
