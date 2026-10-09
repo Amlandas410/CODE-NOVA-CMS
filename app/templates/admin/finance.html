@@ -1,4 +1,84 @@
-{% extends 'base.html' %}{% block title %}Fees & Dues · CODE-NOVA CMS Admin{% endblock %}{% block content %}
-<div class="page-head"><div><div class="eyebrow">FINANCE</div><h1>Fees & Dues</h1><p>Maintain total dues, paid amount, refunds and remaining balances.</p></div><form class="search-bar" method="get"><input name="q" value="{{ q or '' }}" placeholder="Search name, student ID, email, course or branch"><button class="btn primary">Search</button></form></div>
-<section class="card"><div class="table-wrap"><table><thead><tr><th>Student</th><th>Course</th><th>Branch</th><th>Total Dues</th><th>Paid</th><th>Refund</th><th>Remaining</th><th>Update</th></tr></thead><tbody>{% for s in students %}<tr><td><strong>{{ s.name }}</strong><small class="block">{{ s.student_id }}</small></td><td>{{ s.course }}</td><td>{{ s.branch }} · Yr {{ s.year }}</td><td>₹{{ '%.2f'|format(s.total_dues) }}</td><td>₹{{ '%.2f'|format(s.amount_paid) }}</td><td>₹{{ '%.2f'|format(s.amount_refunded) }}</td><td><strong>₹{{ '%.2f'|format(s.remaining) }}</strong></td><td><form method="post" action="{{ url_for('admin.finance_update',student_id=s.id) }}" class="mini-form finance-form"><input name="total_dues" value="{{ s.total_dues }}" type="number" min="0" step="0.01"><input name="amount_paid" value="{{ s.amount_paid }}" type="number" min="0" step="0.01"><input name="amount_refunded" value="{{ s.amount_refunded }}" type="number" min="0" step="0.01"><button class="btn primary">Save</button></form></td></tr>{% else %}<tr><td colspan="8" class="empty">No student accounts match your search.</td></tr>{% endfor %}</tbody></table></div></section>
+{% extends 'base.html' %}{% block title %}Fees & Dues · CODE-NOVA CMS Admin{%
+endblock %}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">FINANCE</div>
+    <h1>Fees & Dues</h1>
+    <p>Maintain total dues, paid amount, refunds and remaining balances.</p>
+  </div>
+  <form class="search-bar" method="get">
+    <input
+      name="q"
+      value="{{ q or '' }}"
+      placeholder="Search name, student ID, email, course or branch"
+    /><button class="btn primary">Search</button>
+  </form>
+</div>
+<section class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Course</th>
+          <th>Branch</th>
+          <th>Total Dues</th>
+          <th>Paid</th>
+          <th>Refund</th>
+          <th>Remaining</th>
+          <th>Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in students %}
+        <tr>
+          <td>
+            <strong>{{ s.name }}</strong
+            ><small class="block">{{ s.student_id }}</small>
+          </td>
+          <td>{{ s.course }}</td>
+          <td>{{ s.branch }} · Yr {{ s.year }}</td>
+          <td>₹{{ '%.2f'|format(s.total_dues) }}</td>
+          <td>₹{{ '%.2f'|format(s.amount_paid) }}</td>
+          <td>₹{{ '%.2f'|format(s.amount_refunded) }}</td>
+          <td><strong>₹{{ '%.2f'|format(s.remaining) }}</strong></td>
+          <td>
+            <form
+              method="post"
+              action="{{ url_for('admin.finance_update',student_id=s.id) }}"
+              class="mini-form finance-form"
+            >
+              <input
+                name="total_dues"
+                value="{{ s.total_dues }}"
+                type="number"
+                min="0"
+                step="0.01"
+              /><input
+                name="amount_paid"
+                value="{{ s.amount_paid }}"
+                type="number"
+                min="0"
+                step="0.01"
+              /><input
+                name="amount_refunded"
+                value="{{ s.amount_refunded }}"
+                type="number"
+                min="0"
+                step="0.01"
+              /><button class="btn primary">Save</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="8" class="empty">
+            No student accounts match your search.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
 {% endblock %}

@@ -1,1 +1,49 @@
-{% extends 'base.html' %}{% block title %}Fees · CODE-NOVA CMS{% endblock %}{% block content %}<div class="page-head"><div><div class="eyebrow">FINANCE</div><h1>Fees & dues</h1><p>Clear view of recorded dues, payments, remaining balance and refunds.</p></div></div>{% if fee %}<div class="grid kpis fee-kpis"><div class="card kpi"><span>Total dues</span><strong>₹{{'%.2f'|format(fee.total_dues)}}</strong></div><div class="card kpi"><span>Amount paid</span><strong>₹{{'%.2f'|format(fee.amount_paid)}}</strong></div><div class="card kpi"><span>Amount remaining</span><strong>₹{{'%.2f'|format(fee.amount_remaining)}}</strong></div><div class="card kpi"><span>Amount refunded</span><strong>₹{{'%.2f'|format(fee.amount_refunded)}}</strong></div></div><section class="card section-card"><h2>Account summary</h2><div class="progress"><i style="width:{{ ((fee.amount_paid/fee.total_dues)*100 if fee.total_dues else 0) }}%"></i></div><div class="split-note"><span>{{((fee.amount_paid/fee.total_dues)*100 if fee.total_dues else 0)|round(1)}}% of dues recorded as paid</span><span>Last updated {{fee.updated_at.strftime('%d %b %Y')}}</span></div></section>{% else %}<div class="card empty">No fee account is available yet.</div>{% endif %}<div class="alert info">Payment initiation is intentionally read-only in Student Phase 1. Administration owns the official ledger; later phases can add payment gateway integration.</div>{% endblock %}
+{% extends 'base.html' %}{% block title %}Fees · CODE-NOVA CMS{% endblock %}{%
+block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">FINANCE</div>
+    <h1>Fees & dues</h1>
+    <p>Clear view of recorded dues, payments, remaining balance and refunds.</p>
+  </div>
+</div>
+{% if fee %}
+<div class="grid kpis fee-kpis">
+  <div class="card kpi">
+    <span>Total dues</span><strong>₹{{'%.2f'|format(fee.total_dues)}}</strong>
+  </div>
+  <div class="card kpi">
+    <span>Amount paid</span><strong>₹{{'%.2f'|format(fee.amount_paid)}}</strong>
+  </div>
+  <div class="card kpi">
+    <span>Amount remaining</span
+    ><strong>₹{{'%.2f'|format(fee.amount_remaining)}}</strong>
+  </div>
+  <div class="card kpi">
+    <span>Amount refunded</span
+    ><strong>₹{{'%.2f'|format(fee.amount_refunded)}}</strong>
+  </div>
+</div>
+<section class="card section-card">
+  <h2>Account summary</h2>
+  <div class="progress">
+    <i
+      style="width:{{ ((fee.amount_paid/fee.total_dues)*100 if fee.total_dues else 0) }}%"
+    ></i>
+  </div>
+  <div class="split-note">
+    <span
+      >{{((fee.amount_paid/fee.total_dues)*100 if fee.total_dues else
+      0)|round(1)}}% of dues recorded as paid</span
+    ><span>Last updated {{fee.updated_at.strftime('%d %b %Y')}}</span>
+  </div>
+</section>
+{% else %}
+<div class="card empty">No fee account is available yet.</div>
+{% endif %}
+<div class="alert info">
+  Payment initiation is intentionally read-only in Student Phase 1.
+  Administration owns the official ledger; later phases can add payment gateway
+  integration.
+</div>
+{% endblock %}

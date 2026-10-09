@@ -1,1 +1,88 @@
-{% extends 'base.html' %}{% block title %}Complaints · CODE-NOVA CMS{% endblock %}{% block content %}<div class="page-head"><div><div class="eyebrow">HOSTEL & FACILITIES</div><h1>Complaints & maintenance</h1><p>One ticket per issue, responsible department routing, status and ageing.</p></div><span class="pill">Auto-routing enabled</span></div><div class="form-grid two"><section class="card form-card"><h2>Report a new issue</h2><form method="post" action="{{url_for('student.create_complaint')}}" class="stack"><div class="inline-2"><label>Category<select name="category"><option value="electrical">Electrical</option><option value="plumbing">Plumbing</option><option value="civil">Civil</option><option value="internet">Internet / Wi-Fi</option><option value="cleaning">Cleaning</option><option value="furniture">Furniture</option><option value="mess">Mess</option><option value="security">Security</option><option value="other">Other</option></select></label><label>Room no.<input name="room_no" value="{{student.room_no or ''}}"></label></div><label>Issue title<input name="title" required placeholder="Fan not working"></label><label>Details<textarea name="details" required rows="4" placeholder="Describe what is wrong and any useful details."></textarea></label><label>How long has it been happening? <span class="muted">days</span><input name="started_days" type="number" min="0" value="0"></label><button class="btn primary">Create ticket</button></form><div class="tiny-note">CODE-NOVA CMS detects repeated recent issues and flags them as recurring for administrators.</div></section><section class="card section-card"><div class="section-head"><div><h2>Your tickets</h2><p>Approved but unresolved tickets remain visible as ageing issues.</p></div></div>{% for c in complaints %}<article class="ticket"><div class="ticket-head"><strong>{{c.ticket_no}}</strong><span class="status {{c.status}}">{{c.status|replace('_',' ')}}</span></div><h3>{{c.title}}</h3><p>{{c.details|replace('\n',' ')}}</p><div class="ticket-meta"><span>{{c.category|title}} · {{c.department}}</span><span>Started {{c.started_days}} day{{'' if c.started_days==1 else 's'}} ago</span></div></article>{% else %}<div class="empty">No complaints recorded.</div>{% endfor %}</section></div>{% endblock %}
+{% extends 'base.html' %}{% block title %}Complaints · CODE-NOVA CMS{% endblock
+%}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">HOSTEL & FACILITIES</div>
+    <h1>Complaints & maintenance</h1>
+    <p>
+      One ticket per issue, responsible department routing, status and ageing.
+    </p>
+  </div>
+  <span class="pill">Auto-routing enabled</span>
+</div>
+<div class="form-grid two">
+  <section class="card form-card">
+    <h2>Report a new issue</h2>
+    <form
+      method="post"
+      action="{{url_for('student.create_complaint')}}"
+      class="stack"
+    >
+      <div class="inline-2">
+        <label
+          >Category<select name="category">
+            <option value="electrical">Electrical</option>
+            <option value="plumbing">Plumbing</option>
+            <option value="civil">Civil</option>
+            <option value="internet">Internet / Wi-Fi</option>
+            <option value="cleaning">Cleaning</option>
+            <option value="furniture">Furniture</option>
+            <option value="mess">Mess</option>
+            <option value="security">Security</option>
+            <option value="other">Other</option>
+          </select></label
+        ><label
+          >Room no.<input name="room_no" value="{{student.room_no or ''}}"
+        /></label>
+      </div>
+      <label
+        >Issue title<input
+          name="title"
+          required
+          placeholder="Fan not working" /></label
+      ><label
+        >Details<textarea
+          name="details"
+          required
+          rows="4"
+          placeholder="Describe what is wrong and any useful details."
+        ></textarea></label
+      ><label
+        >How long has it been happening? <span class="muted">days</span
+        ><input name="started_days" type="number" min="0" value="0" /></label
+      ><button class="btn primary">Create ticket</button>
+    </form>
+    <div class="tiny-note">
+      CODE-NOVA CMS detects repeated recent issues and flags them as recurring
+      for administrators.
+    </div>
+  </section>
+  <section class="card section-card">
+    <div class="section-head">
+      <div>
+        <h2>Your tickets</h2>
+        <p>Approved but unresolved tickets remain visible as ageing issues.</p>
+      </div>
+    </div>
+    {% for c in complaints %}
+    <article class="ticket">
+      <div class="ticket-head">
+        <strong>{{c.ticket_no}}</strong
+        ><span class="status {{c.status}}">{{c.status|replace('_',' ')}}</span>
+      </div>
+      <h3>{{c.title}}</h3>
+      <p>{{c.details|replace('\n',' ')}}</p>
+      <div class="ticket-meta">
+        <span>{{c.category|title}} · {{c.department}}</span
+        ><span
+          >Started {{c.started_days}} day{{'' if c.started_days==1 else 's'}}
+          ago</span
+        >
+      </div>
+    </article>
+    {% else %}
+    <div class="empty">No complaints recorded.</div>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}

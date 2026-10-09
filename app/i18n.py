@@ -11,6 +11,8 @@ TRANSLATIONS = {
         "fees": "Fees & Dues",
         "logout": "Logout",
         "good_morning": "Good morning",
+        "good_afternoon": "Good afternoon",
+        "good_evening": "Good evening",
     },
     "od": {
         "dashboard": "ଡ୍ୟାସବୋର୍ଡ",
@@ -24,6 +26,8 @@ TRANSLATIONS = {
         "fees": "ଫିସ୍ ଓ ବକେୟା",
         "logout": "ଲଗଆଉଟ୍",
         "good_morning": "ସୁପ୍ରଭାତ",
+        "good_afternoon": "ଶୁଭ ଅପରାହ୍ନ",
+        "good_evening": "ଶୁଭ ସନ୍ଧ୍ୟା",
     },
     "hi": {
         "dashboard": "डैशबोर्ड",
@@ -37,5 +41,7 @@ TRANSLATIONS = {
         "fees": "फीस और बकाया",
         "logout": "लॉग आउट",
         "good_morning": "सुप्रभात",
+        "good_afternoon": "शुभ दोपहर",
+        "good_evening": "शुभ संध्या",
     },
 }

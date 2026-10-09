@@ -1,4 +1,49 @@
-{% extends 'base.html' %}{% block title %}Attendance · CODE-NOVA CMS{% endblock %}{% block content %}
-<div class="page-head"><div><div class="eyebrow">ACADEMICS</div><h1>Attendance</h1><p>Live visibility from teacher-maintained attendance records.</p></div><div class="score-ring"><div><strong>{{overall}}%</strong><span>overall</span></div></div></div>
-<section class="card section-card"><div class="alert info">Attendance is calculated from the total days your teacher has entered. Keep an eye on subjects close to the 75% threshold.</div><div class="table-wrap"><table><thead><tr><th>Subject</th><th>Present</th><th>Total days</th><th>Percentage</th><th>Health</th></tr></thead><tbody>{% for r in attendance %}<tr><td><strong>{{r.subject}}</strong></td><td>{{r.present_days}}</td><td>{{r.total_days}}</td><td><strong>{{r.percentage}}%</strong></td><td><span class="health {{'good' if r.percentage>=75 else 'warn' if r.percentage>=65 else 'bad'}}">{{'On track' if r.percentage>=75 else 'Watch' if r.percentage>=65 else 'Shortage risk'}}</span></td></tr>{% endfor %}</tbody></table></div></section>
+{% extends 'base.html' %}{% block title %}Attendance · CODE-NOVA CMS{% endblock
+%}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">ACADEMICS</div>
+    <h1>Attendance</h1>
+    <p>Live visibility from teacher-maintained attendance records.</p>
+  </div>
+  <div class="score-ring">
+    <div><strong>{{overall}}%</strong><span>overall</span></div>
+  </div>
+</div>
+<section class="card section-card">
+  <div class="alert info">
+    Attendance is calculated from the total days your teacher has entered. Keep
+    an eye on subjects close to the 75% threshold.
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Present</th>
+          <th>Total days</th>
+          <th>Percentage</th>
+          <th>Health</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in attendance %}
+        <tr>
+          <td><strong>{{r.subject}}</strong></td>
+          <td>{{r.present_days}}</td>
+          <td>{{r.total_days}}</td>
+          <td><strong>{{r.percentage}}%</strong></td>
+          <td>
+            <span
+              class="health {{'good' if r.percentage>=75 else 'warn' if r.percentage>=65 else 'bad'}}"
+              >{{'On track' if r.percentage>=75 else 'Watch' if r.percentage>=65
+              else 'Shortage risk'}}</span
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
 {% endblock %}

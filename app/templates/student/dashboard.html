@@ -1,16 +1,186 @@
-{% extends 'base.html' %}{% block title %}CODE-NOVA CMS · Dashboard{% endblock %}
-{% block content %}
-<div class="hero"><div><div class="eyebrow">MONDAY · CAMPUS OVERVIEW</div><h1>{{ translations[session.get('lang','en')].good_morning }}, {{ student.name.split()[0] }}.</h1><p>Everything you need for classes, hostel life, requests and campus communication.</p></div><div class="hero-actions"><a class="btn secondary" href="{{ url_for('student.requests_home') }}">+ New request</a><a class="btn dark" href="{{ url_for('student.complaints') }}">Report issue</a></div></div>
+{% extends 'base.html' %}{% block title %}CODE-NOVA CMS · Dashboard{% endblock
+%} {% block content %}
+<div class="hero">
+  <div>
+    <div class="eyebrow">MONDAY · CAMPUS OVERVIEW</div>
+    <h1>
+      <span
+        id="dashboard-greeting"
+        data-morning="{{ translations[session.get('lang','en')].good_morning }}"
+        data-afternoon="{{ translations[session.get('lang','en')].good_afternoon }}"
+        data-evening="{{ translations[session.get('lang','en')].good_evening }}"
+        >{{ translations[session.get('lang','en')].good_morning }}</span
+      >, {{ student.name.split()[0] }}.
+    </h1>
+    <p>
+      Everything you need for classes, hostel life, requests and campus
+      communication.
+    </p>
+  </div>
+  <div class="hero-actions">
+    <a class="btn secondary" href="{{ url_for('student.requests_home') }}"
+      >+ New request</a
+    ><a class="btn dark" href="{{ url_for('student.complaints') }}"
+      >Report issue</a
+    >
+  </div>
+</div>
 <div class="grid kpis">
-  <a class="card kpi" href="{{ url_for('student.attendance') }}"><div class="kpi-icon">◷</div><span>Overall attendance</span><strong>{{ overall }}%</strong><small>{{ attendance|length }} subjects tracked</small></a>
-  <a class="card kpi" href="{{ url_for('student.fees') }}"><div class="kpi-icon">₹</div><span>Amount remaining</span><strong>₹{{ '%.0f'|format(fee.amount_remaining if fee else 0) }}</strong><small>Total paid ₹{{ '%.0f'|format(fee.amount_paid if fee else 0) }}</small></a>
-  <a class="card kpi" href="{{ url_for('student.complaints') }}"><div class="kpi-icon">⚙</div><span>Open tickets</span><strong>{{ complaints|selectattr('status','ne','resolved')|list|length }}</strong><small>Live status available</small></a>
-  <a class="card kpi" href="{{ url_for('student.notices') }}"><div class="kpi-icon">!</div><span>Unread notices</span><strong>{{ unread }}</strong><small>Targeted to your profile</small></a>
+  <a class="card kpi" href="{{ url_for('student.attendance') }}"
+    ><div class="kpi-icon">◷</div>
+    <span>Overall attendance</span><strong>{{ overall }}%</strong
+    ><small>{{ attendance|length }} subjects tracked</small></a
+  >
+  <a class="card kpi" href="{{ url_for('student.fees') }}"
+    ><div class="kpi-icon">₹</div>
+    <span>Amount remaining</span
+    ><strong>₹{{ '%.0f'|format(fee.amount_remaining if fee else 0) }}</strong
+    ><small
+      >Total paid ₹{{ '%.0f'|format(fee.amount_paid if fee else 0) }}</small
+    ></a
+  >
+  <a class="card kpi" href="{{ url_for('student.complaints') }}"
+    ><div class="kpi-icon">⚙</div>
+    <span>Open tickets</span
+    ><strong
+      >{{ complaints|selectattr('status','ne','resolved')|list|length }}</strong
+    ><small>Live status available</small></a
+  >
+  <a class="card kpi" href="{{ url_for('student.notices') }}"
+    ><div class="kpi-icon">!</div>
+    <span>Unread notices</span><strong>{{ unread }}</strong
+    ><small>Targeted to your profile</small></a
+  >
 </div>
 <div class="two-col">
-<section class="card section-card"><div class="section-head"><div><h2>Attendance health</h2><p>Subject-wise visibility maintained from teacher attendance entries.</p></div><a href="{{ url_for('student.attendance') }}">View all →</a></div><div class="bars">{% for r in attendance[:5] %}<div class="bar-row"><div class="bar-label"><span>{{ r.subject }}</span><strong>{{ r.percentage }}%</strong></div><div class="bar"><i style="width:{{ r.percentage }}%"></i></div></div>{% endfor %}</div></section>
-<section class="card section-card"><div class="section-head"><div><h2>Latest notices</h2><p>Admin, teacher and warden updates in one place.</p></div><a href="{{ url_for('student.notices') }}">All notices →</a></div>{% for n in notices[:4] %}<article class="notice-row"><span class="priority {{n.priority}}"></span><div><strong>{{ n.title }}</strong><p>{{ n.body|truncate(110) }}</p><small>{{ n.sender_role|title }} · {{ n.created_at.strftime('%d %b') if n.created_at else '' }}</small></div>{% if not n.is_read %}<button class="link-btn notice-read" data-id="{{n.id}}">Mark read</button>{% endif %}</article>{% else %}<div class="empty">No targeted notices right now.</div>{% endfor %}</section></div>
-<div class="two-col"><section class="card section-card"><div class="section-head"><div><h2>Request tracker</h2><p>Leave, gate pass and document requests.</p></div><a href="{{ url_for('student.requests_home') }}">Manage →</a></div>{% for r in requests %}<div class="list-row"><div><strong>{{r.request_type|replace('_',' ')|title}}</strong><span>{{r.reason|truncate(55)}}</span></div><span class="status {{r.status}}">{{r.status|replace('_',' ')}}</span></div>{% else %}<div class="empty">You have no requests yet.</div>{% endfor %}</section><section class="card section-card"><div class="section-head"><div><h2>Recent maintenance</h2><p>Ticket-level visibility with ageing.</p></div><a href="{{ url_for('student.complaints') }}">View tickets →</a></div>{% for c in complaints %}<div class="list-row"><div><strong>{{c.ticket_no}}</strong><span>{{c.title}}</span></div><span class="status {{c.status}}">{{c.status|replace('_',' ')}}</span></div>{% else %}<div class="empty">No maintenance tickets.</div>{% endfor %}</section></div>
-<section class="card section-card"><div class="section-head"><div><h2>Weekly classes</h2><p>Teacher/admin timetable feed for your branch and year.</p></div><a href="{{ url_for('student.timetable') }}">Full timetable →</a></div><div class="timetable-mini">{% for c in upcoming[:8] %}<div class="time-item"><span>{{['','Mon','Tue','Wed','Thu','Fri','Sat','Sun'][c.day_of_week]}}</span><strong>{{ c.start_time|string|truncate(5,True,'') }}</strong><div>{{c.subject}}<small>{{c.room}} · {{c.teacher_name}}</small></div></div>{% endfor %}</div></section>
-<div class="access-strip"><div><strong>Designed for real campus conditions</strong><span>Lightweight pages · keyboard friendly · regional language support · assisted-access login path</span></div><a href="{{ url_for('student.help_page') }}">Accessibility & help →</a></div>
+  <section class="card section-card">
+    <div class="section-head">
+      <div>
+        <h2>Attendance health</h2>
+        <p>
+          Subject-wise visibility maintained from teacher attendance entries.
+        </p>
+      </div>
+      <a href="{{ url_for('student.attendance') }}">View all →</a>
+    </div>
+    <div class="bars">
+      {% for r in attendance[:5] %}
+      <div class="bar-row">
+        <div class="bar-label">
+          <span>{{ r.subject }}</span><strong>{{ r.percentage }}%</strong>
+        </div>
+        <div class="bar"><i style="width:{{ r.percentage }}%"></i></div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="card section-card">
+    <div class="section-head">
+      <div>
+        <h2>Latest notices</h2>
+        <p>Admin, teacher and warden updates in one place.</p>
+      </div>
+      <a href="{{ url_for('student.notices') }}">All notices →</a>
+    </div>
+    {% for n in notices[:4] %}
+    <article class="notice-row">
+      <span class="priority {{n.priority}}"></span>
+      <div>
+        <strong>{{ n.title }}</strong>
+        <p>{{ n.body|truncate(110) }}</p>
+        <small
+          >{{ n.sender_role|title }} · {{ n.created_at.strftime('%d %b') if
+          n.created_at else '' }}</small
+        >
+      </div>
+      {% if not n.is_read %}<button
+        class="link-btn notice-read"
+        data-id="{{n.id}}"
+      >
+        Mark read</button
+      >{% endif %}
+    </article>
+    {% else %}
+    <div class="empty">No targeted notices right now.</div>
+    {% endfor %}
+  </section>
+</div>
+<div class="two-col">
+  <section class="card section-card">
+    <div class="section-head">
+      <div>
+        <h2>Request tracker</h2>
+        <p>Leave, gate pass and document requests.</p>
+      </div>
+      <a href="{{ url_for('student.requests_home') }}">Manage →</a>
+    </div>
+    {% for r in requests %}
+    <div class="list-row">
+      <div>
+        <strong>{{r.request_type|replace('_',' ')|title}}</strong
+        ><span>{{r.reason|truncate(55)}}</span>
+      </div>
+      <span class="status {{r.status}}">{{r.status|replace('_',' ')}}</span>
+    </div>
+    {% else %}
+    <div class="empty">You have no requests yet.</div>
+    {% endfor %}
+  </section>
+  <section class="card section-card">
+    <div class="section-head">
+      <div>
+        <h2>Recent maintenance</h2>
+        <p>Ticket-level visibility with ageing.</p>
+      </div>
+      <a href="{{ url_for('student.complaints') }}">View tickets →</a>
+    </div>
+    {% for c in complaints %}
+    <div class="list-row">
+      <div><strong>{{c.ticket_no}}</strong><span>{{c.title}}</span></div>
+      <span class="status {{c.status}}">{{c.status|replace('_',' ')}}</span>
+    </div>
+    {% else %}
+    <div class="empty">No maintenance tickets.</div>
+    {% endfor %}
+  </section>
+</div>
+<section class="card section-card">
+  <div class="section-head">
+    <div>
+      <h2>Weekly classes</h2>
+      <p>Teacher/admin timetable feed for your branch and year.</p>
+    </div>
+    <a href="{{ url_for('student.timetable') }}">Full timetable →</a>
+  </div>
+  <div class="timetable-mini">
+    {% for c in upcoming[:8] %}
+    <div class="time-item">
+      <span
+        >{{['','Mon','Tue','Wed','Thu','Fri','Sat','Sun'][c.day_of_week]}}</span
+      ><strong>{{ c.start_time|string|truncate(5,True,'') }}</strong>
+      <div>{{c.subject}}<small>{{c.room}} · {{c.teacher_name}}</small></div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+<div class="access-strip">
+  <div>
+    <strong>Designed for real campus conditions</strong
+    ><span
+      >Lightweight pages · keyboard friendly · regional language support ·
+      assisted-access login path</span
+    >
+  </div>
+  <a href="{{ url_for('student.help_page') }}">Accessibility & help →</a>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  const greeting = document.getElementById("dashboard-greeting");
+  if (greeting) {
+    const hour = new Date().getHours();
+    const greetingKey = hour < 12 ? "morning" : hour < 17 ? "afternoon" : "evening";
+    greeting.textContent = greeting.dataset[greetingKey];
+  }
+</script>
 {% endblock %}

@@ -1,6 +1,5 @@
 from contextlib import contextmanager
 from flask import current_app
-import mysql.connector
 
 
 def init_app(app):
@@ -10,6 +9,14 @@ def init_app(app):
 
 @contextmanager
 def get_db():
+    try:
+        import mysql.connector
+    except ModuleNotFoundError as exc:
+        raise RuntimeError(
+            "mysql-connector-python is required for database operations. "
+            "Install the dependencies from requirements.txt."
+        ) from exc
+
     cfg=current_app.config
     connect_args = {
         "host": cfg["MYSQL_HOST"],

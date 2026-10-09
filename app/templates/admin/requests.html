@@ -1,5 +1,152 @@
-{% extends 'base.html' %}{% block title %}Requests · CODE-NOVA CMS Admin{% endblock %}{% block content %}
-<div class="page-head"><div><div class="eyebrow">ADMIN</div><h1>Requests & Approvals</h1><p>Process leave, gate-pass, certificate and document requests in one queue.</p></div></div>
-<section class="card"><div class="section-head"><div><h2>Leave & Gate Pass</h2><p>Approval route chosen by the student is shown for traceability.</p></div></div><div class="table-wrap"><table><thead><tr><th>Student</th><th>Request</th><th>Duration</th><th>Route</th><th>Status</th><th>Decision</th></tr></thead><tbody>{% for r in leaves %}<tr><td><strong>{{ r.student_name }}</strong><small class="block">{{ r.student_id }} · {{ r.hostel or 'Day scholar' }}</small></td><td>{{ r.request_type|replace('_',' ')|title }}<small class="block">{{ r.reason }}</small></td><td>{{ r.start_at.strftime('%d %b %H:%M') }}<small class="block">to {{ r.end_at.strftime('%d %b %H:%M') }}</small></td><td><span class="tag">{{ r.approval_route|title }}</span></td><td><span class="status {{ r.status }}">{{ r.status|title }}</span></td><td>{% if r.status=='pending' %}<form method="post" action="{{ url_for('admin.leave_decision',req_id=r.id) }}" class="mini-form"><input name="decision_note" placeholder="Decision note"><div class="mini-buttons"><button class="btn success" name="status" value="approved">Approve</button><button class="btn danger" name="status" value="rejected">Reject</button></div></form>{% else %}{{ r.decision_note or '—' }}{% endif %}</td></tr>{% else %}<tr><td colspan="6" class="empty">No leave or gate-pass requests.</td></tr>{% endfor %}</tbody></table></div></section>
-<section class="card"><div class="section-head"><div><h2>Documents & Certificates</h2><p>Move requests through processing until ready for collection/delivery.</p></div></div><div class="table-wrap"><table><thead><tr><th>Student</th><th>Document</th><th>Purpose</th><th>Copies</th><th>Mode</th><th>Status</th><th>Update</th></tr></thead><tbody>{% for r in docs %}<tr><td><strong>{{ r.student_name }}</strong><small class="block">{{ r.student_id }}</small></td><td>{{ r.document_type }}</td><td>{{ r.purpose }}</td><td>{{ r.copies }}</td><td>{{ r.delivery_mode }}</td><td><span class="status {{ r.status }}">{{ r.status|title }}</span></td><td><form method="post" action="{{ url_for('admin.document_decision',req_id=r.id) }}" class="mini-form"><input name="admin_note" placeholder="Admin note" value="{{ r.admin_note or '' }}"><select name="status"><option value="pending">Pending</option><option value="processing" {% if r.status=='processing' %}selected{% endif %}>Processing</option><option value="ready" {% if r.status=='ready' %}selected{% endif %}>Ready</option><option value="rejected" {% if r.status=='rejected' %}selected{% endif %}>Rejected</option></select><button class="btn primary">Save</button></form></td></tr>{% else %}<tr><td colspan="7" class="empty">No document requests.</td></tr>{% endfor %}</tbody></table></div></section>
+{% extends 'base.html' %}{% block title %}Requests · CODE-NOVA CMS Admin{%
+endblock %}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">ADMIN</div>
+    <h1>Requests & Approvals</h1>
+    <p>
+      Process leave, gate-pass, certificate and document requests in one queue.
+    </p>
+  </div>
+</div>
+<section class="card">
+  <div class="section-head">
+    <div>
+      <h2>Leave & Gate Pass</h2>
+      <p>Approval route chosen by the student is shown for traceability.</p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Request</th>
+          <th>Duration</th>
+          <th>Route</th>
+          <th>Status</th>
+          <th>Decision</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in leaves %}
+        <tr>
+          <td>
+            <strong>{{ r.student_name }}</strong
+            ><small class="block"
+              >{{ r.student_id }} · {{ r.hostel or 'Day scholar' }}</small
+            >
+          </td>
+          <td>
+            {{ r.request_type|replace('_',' ')|title }}<small class="block"
+              >{{ r.reason }}</small
+            >
+          </td>
+          <td>
+            {{ r.start_at.strftime('%d %b %H:%M') }}<small class="block"
+              >to {{ r.end_at.strftime('%d %b %H:%M') }}</small
+            >
+          </td>
+          <td><span class="tag">{{ r.approval_route|title }}</span></td>
+          <td>
+            <span class="status {{ r.status }}">{{ r.status|title }}</span>
+          </td>
+          <td>
+            {% if r.status=='pending' %}
+            <form
+              method="post"
+              action="{{ url_for('admin.leave_decision',req_id=r.id) }}"
+              class="mini-form"
+            >
+              <input name="decision_note" placeholder="Decision note" />
+              <div class="mini-buttons">
+                <button class="btn success" name="status" value="approved">
+                  Approve</button
+                ><button class="btn danger" name="status" value="rejected">
+                  Reject
+                </button>
+              </div>
+            </form>
+            {% else %}{{ r.decision_note or '—' }}{% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="empty">No leave or gate-pass requests.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+<section class="card">
+  <div class="section-head">
+    <div>
+      <h2>Documents & Certificates</h2>
+      <p>
+        Move requests through processing until ready for collection/delivery.
+      </p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Document</th>
+          <th>Purpose</th>
+          <th>Copies</th>
+          <th>Mode</th>
+          <th>Status</th>
+          <th>Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in docs %}
+        <tr>
+          <td>
+            <strong>{{ r.student_name }}</strong
+            ><small class="block">{{ r.student_id }}</small>
+          </td>
+          <td>{{ r.document_type }}</td>
+          <td>{{ r.purpose }}</td>
+          <td>{{ r.copies }}</td>
+          <td>{{ r.delivery_mode }}</td>
+          <td>
+            <span class="status {{ r.status }}">{{ r.status|title }}</span>
+          </td>
+          <td>
+            <form
+              method="post"
+              action="{{ url_for('admin.document_decision',req_id=r.id) }}"
+              class="mini-form"
+            >
+              <input
+                name="admin_note"
+                placeholder="Admin note"
+                value="{{ r.admin_note or '' }}"
+              /><select name="status">
+                <option value="pending">Pending</option>
+                <option value="processing" {% if r.status == 'processing' %}selected{% endif %}>
+                  Processing
+                </option>
+                <option value="ready" {% if r.status == 'ready' %}selected{% endif %}>
+                  Ready
+                </option>
+                <option value="rejected" {% if r.status == 'rejected' %}selected{% endif %}>
+                  Rejected
+                </option></select
+              ><button class="btn primary">Save</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" class="empty">No document requests.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
 {% endblock %}

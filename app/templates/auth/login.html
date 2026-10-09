@@ -1,2 +1,45 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="{{ url_for('static',filename='css/app.css') }}"><title>CODE-NOVA CMS · Student Sign In</title></head><body class="login-page"><div class="login-panel"><div class="brand large"><div class="brand-mark">F</div><div><strong>CODE-NOVA CMS</strong><span>Campus Operations Platform</span></div></div><h1>Welcome back</h1><p class="muted">Sign in to your student workspace.</p>{% with messages=get_flashed_messages(with_categories=true) %}{% for c,m in messages %}<div class="flash {{c}}">{{m}}</div>{% endfor %}{% endwith %}<form method="post" class="stack"><label>College Email or Student ID<input name="identity" required autocomplete="username" placeholder="student@college.edu or FRE2026S001"></label><label>Password<input type="password" name="password" required autocomplete="current-password" placeholder="••••••••"></label><button class="btn primary wide">Sign in</button></form>
-  <!-- <div class="demo-card"><strong>Demo account</strong><span>student@gmail.com</span><span>Password: Student@123</span><small>Demo data is included so you can test every Student module workflow immediately.</small></div></div></body></html> -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='css/app.css') }}"
+    />
+    <title>CODE-NOVA CMS · Student Sign In</title>
+  </head>
+  <body class="login-page">
+    <div class="login-panel">
+      <div class="brand large">
+        <div class="brand-mark">CN</div>
+        <div>
+          <strong>CODE-NOVA CMS</strong><span>Campus Operations Platform</span>
+        </div>
+      </div>
+      <h1>Welcome back</h1>
+      <p class="muted">Sign in to your student workspace.</p>
+      {% with messages=get_flashed_messages(with_categories=true) %}{% for c,m
+      in messages %}
+      <div class="flash {{c}}">{{m}}</div>
+      {% endfor %}{% endwith %}
+      <form method="post" class="stack">
+        <label
+          >College Email or Student ID<input
+            name="identity"
+            required
+            autocomplete="username"
+            placeholder="student@college.edu or FRE2026S001" /></label
+        ><label
+          >Password<input
+            type="password"
+            name="password"
+            required
+            autocomplete="current-password"
+            placeholder="••••••••" /></label
+        ><button class="btn primary wide">Sign in</button>
+      </form>
+      <!-- <div class="demo-card"><strong>Demo account</strong><span>student@gmail.com</span><span>Password: Student@123</span><small>Demo data is included so you can test every Student module workflow immediately.</small></div></div></body></html> -->
+    </div>
+  </body>
+</html>

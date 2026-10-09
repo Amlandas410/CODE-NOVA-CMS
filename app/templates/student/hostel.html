@@ -1,1 +1,48 @@
-{% extends 'base.html' %}{% block title %}Room & Assets · CODE-NOVA CMS{% endblock %}{% block content %}<div class="page-head"><div><div class="eyebrow">HOSTEL</div><h1>Room & asset records</h1><p>Your assigned room and inventory, as recorded by hostel administration.</p></div></div>{% if room %}<section class="card room-banner"><div><span>{{room[0].hostel}}</span><h2>Room {{room[0].room_no}}</h2><p>Floor {{room[0].floor}} · Capacity {{room[0].capacity}} · Warden {{room[0].warden_name}}</p></div><div class="room-number">{{room[0].room_no}}</div></section><section class="card section-card"><div class="section-head"><div><h2>Assets</h2><p>Report discrepancies through Complaints & Maintenance.</p></div><a href="{{url_for('student.complaints')}}">Report issue →</a></div><div class="asset-grid">{% for r in room %}<div class="asset"><div class="asset-icon">◈</div><strong>{{r.asset_name}}</strong><span>Code: {{r.asset_code or '—'}}</span><span>Qty: {{r.quantity}}</span><small class="health {{'good' if r.condition_status=='good' else 'warn' if r.condition_status=='fair' else 'bad'}}">{{r.condition_status|title}}</small></div>{% endfor %}</div></section>{% else %}<div class="card empty">No room record has been assigned yet.</div>{% endif %}{% endblock %}
+{% extends 'base.html' %}{% block title %}Room & Assets · CODE-NOVA CMS{%
+endblock %}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">HOSTEL</div>
+    <h1>Room & asset records</h1>
+    <p>
+      Your assigned room and inventory, as recorded by hostel administration.
+    </p>
+  </div>
+</div>
+{% if room %}
+<section class="card room-banner">
+  <div>
+    <span>{{room[0].hostel}}</span>
+    <h2>Room {{room[0].room_no}}</h2>
+    <p>
+      Floor {{room[0].floor}} · Capacity {{room[0].capacity}} · Warden
+      {{room[0].warden_name}}
+    </p>
+  </div>
+  <div class="room-number">{{room[0].room_no}}</div>
+</section>
+<section class="card section-card">
+  <div class="section-head">
+    <div>
+      <h2>Assets</h2>
+      <p>Report discrepancies through Complaints & Maintenance.</p>
+    </div>
+    <a href="{{url_for('student.complaints')}}">Report issue →</a>
+  </div>
+  <div class="asset-grid">
+    {% for r in room %}
+    <div class="asset">
+      <div class="asset-icon">◈</div>
+      <strong>{{r.asset_name}}</strong><span>Code: {{r.asset_code or '—'}}</span
+      ><span>Qty: {{r.quantity}}</span
+      ><small
+        class="health {{'good' if r.condition_status=='good' else 'warn' if r.condition_status=='fair' else 'bad'}}"
+        >{{r.condition_status|title}}</small
+      >
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% else %}
+<div class="card empty">No room record has been assigned yet.</div>
+{% endif %}{% endblock %}

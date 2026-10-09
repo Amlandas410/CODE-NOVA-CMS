@@ -1,1 +1,72 @@
-{% extends 'base.html' %}{% block title %}Warden Requests · CODE-NOVA CMS{% endblock %}{% block content %}<div class="page-head"><div><div class="eyebrow">HOSTEL APPROVALS</div><h1>Leave & Gate Requests</h1><p>Approve or reject requests from residents of {{ warden.hostel }}.</p></div></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Student</th><th>Type</th><th>Duration</th><th>Reason / Destination</th><th>Status</th><th>Action</th></tr></thead><tbody>{% for r in requests %}<tr><td><strong>{{ r.student_name }}</strong><small class="block">{{ r.student_id }} · Room {{ r.room_no }}</small></td><td>{{ r.request_type|replace('_',' ')|title }}</td><td>{{ r.start_at.strftime('%d %b %H:%M') }}<small class="block">to {{ r.end_at.strftime('%d %b %H:%M') }}</small></td><td>{{ r.reason|truncate(55) }}{% if r.destination %}<small class="block">To: {{ r.destination }}</small>{% endif %}</td><td><span class="status {{ r.status }}">{{ r.status|title }}</span></td><td>{% if r.status=='pending' %}<form method="post" action="{{ url_for('warden.request_decision',req_id=r.id) }}" class="mini-buttons"><button name="status" value="approved" class="btn success">Approve</button><button name="status" value="rejected" class="btn danger">Reject</button></form>{% else %}{{ r.decision_note or '—' }}{% endif %}</td></tr>{% else %}<tr><td colspan="6" class="empty">No requests for this hostel.</td></tr>{% endfor %}</tbody></table></div></div>{% endblock %}
+{% extends 'base.html' %}{% block title %}Warden Requests · CODE-NOVA CMS{%
+endblock %}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">HOSTEL APPROVALS</div>
+    <h1>Leave & Gate Requests</h1>
+    <p>Approve or reject requests from residents of {{ warden.hostel }}.</p>
+  </div>
+</div>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Type</th>
+          <th>Duration</th>
+          <th>Reason / Destination</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in requests %}
+        <tr>
+          <td>
+            <strong>{{ r.student_name }}</strong
+            ><small class="block"
+              >{{ r.student_id }} · Room {{ r.room_no }}</small
+            >
+          </td>
+          <td>{{ r.request_type|replace('_',' ')|title }}</td>
+          <td>
+            {{ r.start_at.strftime('%d %b %H:%M') }}<small class="block"
+              >to {{ r.end_at.strftime('%d %b %H:%M') }}</small
+            >
+          </td>
+          <td>
+            {{ r.reason|truncate(55) }}{% if r.destination %}<small
+              class="block"
+              >To: {{ r.destination }}</small
+            >{% endif %}
+          </td>
+          <td>
+            <span class="status {{ r.status }}">{{ r.status|title }}</span>
+          </td>
+          <td>
+            {% if r.status=='pending' %}
+            <form
+              method="post"
+              action="{{ url_for('warden.request_decision',req_id=r.id) }}"
+              class="mini-buttons"
+            >
+              <button name="status" value="approved" class="btn success">
+                Approve</button
+              ><button name="status" value="rejected" class="btn danger">
+                Reject
+              </button>
+            </form>
+            {% else %}{{ r.decision_note or '—' }}{% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="empty">No requests for this hostel.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

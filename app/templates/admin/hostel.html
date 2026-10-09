@@ -1,6 +1,128 @@
-{% extends 'base.html' %}{% block title %}Hostel & Visitors · CODE-NOVA CMS Admin{% endblock %}{% block content %}
-<div class="page-head"><div><div class="eyebrow">HOSTEL OPERATIONS</div><h1>Rooms, Assets & Visitors</h1><p>See room inventory and control visitor approvals from the administration side.</p></div></div>
-<section class="card"><div class="section-head"><div><h2>Room Register</h2><p>Read-only inventory view for the Phase 2 admin console.</p></div></div><div class="table-wrap"><table><thead><tr><th>Hostel</th><th>Room</th><th>Floor</th><th>Capacity</th><th>Warden</th><th>Asset types</th><th>Total qty</th></tr></thead><tbody>{% for r in rooms %}<tr><td>{{ r.hostel }}</td><td><strong>{{ r.room_no }}</strong></td><td>{{ r.floor }}</td><td>{{ r.capacity }}</td><td>{{ r.warden_name }}</td><td>{{ r.asset_types }}</td><td>{{ r.asset_qty }}</td></tr>{% else %}<tr><td colspan="7" class="empty">No rooms found.</td></tr>{% endfor %}</tbody></table></div></section>
-<div class="two-col admin-grid"><section class="card"><div class="section-head"><div><h2>Asset Register</h2></div></div><div class="table-wrap"><table><thead><tr><th>Room</th><th>Asset</th><th>Code</th><th>Qty</th><th>Condition</th></tr></thead><tbody>{% for a in assets %}<tr><td>{{ a.hostel }} / {{ a.room_no }}</td><td><strong>{{ a.asset_name }}</strong></td><td>{{ a.asset_code }}</td><td>{{ a.quantity }}</td><td><span class="tag {{ a.condition_status }}">{{ a.condition_status|title }}</span></td></tr>{% endfor %}</tbody></table></div></section>
-<section class="card"><div class="section-head"><div><h2>Visitor Pass Queue</h2><p>Approve/reject visitor requests before the gate uses them.</p></div></div><div class="compact-list">{% for v in visitors %}<div class="visitor-row"><div><strong>{{ v.visitor_name }}</strong><small>{{ v.student_name }} · {{ v.student_id }} · {{ v.visit_date }}</small><small>{{ v.purpose }}</small></div><div>{% if v.status=='pending' %}<form method="post" action="{{ url_for('admin.visitor_decision',visit_id=v.id) }}" class="mini-buttons"><button class="btn success" name="status" value="approved">Approve</button><button class="btn danger" name="status" value="rejected">Reject</button></form>{% else %}<span class="status {{ v.status }}">{{ v.status|title }}</span>{% endif %}</div></div>{% else %}<div class="empty">No visitor requests.</div>{% endfor %}</div></section></div>
+{% extends 'base.html' %}{% block title %}Hostel & Visitors · CODE-NOVA CMS
+Admin{% endblock %}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">HOSTEL OPERATIONS</div>
+    <h1>Rooms, Assets & Visitors</h1>
+    <p>
+      See room inventory and control visitor approvals from the administration
+      side.
+    </p>
+  </div>
+</div>
+<section class="card">
+  <div class="section-head">
+    <div>
+      <h2>Room Register</h2>
+      <p>Read-only inventory view for the Phase 2 admin console.</p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Hostel</th>
+          <th>Room</th>
+          <th>Floor</th>
+          <th>Capacity</th>
+          <th>Warden</th>
+          <th>Asset types</th>
+          <th>Total qty</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rooms %}
+        <tr>
+          <td>{{ r.hostel }}</td>
+          <td><strong>{{ r.room_no }}</strong></td>
+          <td>{{ r.floor }}</td>
+          <td>{{ r.capacity }}</td>
+          <td>{{ r.warden_name }}</td>
+          <td>{{ r.asset_types }}</td>
+          <td>{{ r.asset_qty }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" class="empty">No rooms found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+<div class="two-col admin-grid">
+  <section class="card">
+    <div class="section-head">
+      <div><h2>Asset Register</h2></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Room</th>
+            <th>Asset</th>
+            <th>Code</th>
+            <th>Qty</th>
+            <th>Condition</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in assets %}
+          <tr>
+            <td>{{ a.hostel }} / {{ a.room_no }}</td>
+            <td><strong>{{ a.asset_name }}</strong></td>
+            <td>{{ a.asset_code }}</td>
+            <td>{{ a.quantity }}</td>
+            <td>
+              <span class="tag {{ a.condition_status }}"
+                >{{ a.condition_status|title }}</span
+              >
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="card">
+    <div class="section-head">
+      <div>
+        <h2>Visitor Pass Queue</h2>
+        <p>Approve/reject visitor requests before the gate uses them.</p>
+      </div>
+    </div>
+    <div class="compact-list">
+      {% for v in visitors %}
+      <div class="visitor-row">
+        <div>
+          <strong>{{ v.visitor_name }}</strong
+          ><small
+            >{{ v.student_name }} · {{ v.student_id }} · {{ v.visit_date
+            }}</small
+          ><small>{{ v.purpose }}</small>
+        </div>
+        <div>
+          {% if v.status=='pending' %}
+          <form
+            method="post"
+            action="{{ url_for('admin.visitor_decision',visit_id=v.id) }}"
+            class="mini-buttons"
+          >
+            <button class="btn success" name="status" value="approved">
+              Approve</button
+            ><button class="btn danger" name="status" value="rejected">
+              Reject
+            </button>
+          </form>
+          {% else %}<span class="status {{ v.status }}"
+            >{{ v.status|title }}</span
+          >{% endif %}
+        </div>
+      </div>
+      {% else %}
+      <div class="empty">No visitor requests.</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
 {% endblock %}

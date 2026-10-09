@@ -1,1 +1,151 @@
-{% extends 'base.html' %}{% block title %}Requests · CODE-NOVA CMS{% endblock %}{% block content %}<div class="page-head"><div><div class="eyebrow">SELF-SERVICE</div><h1>Requests</h1><p>Submit and track leave, gate pass, documents and certificates.</p></div></div><div class="form-grid two"><section class="card form-card"><h2>Leave / Gate pass</h2><p class="muted">Route to the correct approver and track the decision.</p><form method="post" action="{{url_for('student.create_leave')}}" class="stack"><div class="inline-2"><label>Request type<select name="request_type"><option value="leave">Leave</option><option value="gate_pass">Gate Pass</option></select></label><label>Approval route<select name="approval_route"><option value="warden">Hostel Warden</option><option value="teacher">Teacher</option><option value="admin">Administration</option></select></label></div><label>Reason<textarea name="reason" required rows="3" placeholder="Why do you need permission?"></textarea></label><div class="inline-2"><label>Start<input name="start_at" type="datetime-local" required></label><label>End<input name="end_at" type="datetime-local" required></label></div><div class="inline-2"><label>Destination<input name="destination" placeholder="Home / market / hospital"></label><label>Emergency contact<input name="emergency_contact" placeholder="Phone number"></label></div><button class="btn primary">Submit request</button></form></section><section class="card form-card"><h2>Document / certificate</h2><p class="muted">Send a request to administration.</p><form method="post" action="{{url_for('student.create_document')}}" class="stack"><label>Document type<select name="document_type"><option>Bonafide Certificate</option><option>Character Certificate</option><option>Migration Certificate</option><option>Transfer Certificate</option><option>Transcript / Marksheet</option><option>Other</option></select></label><label>Purpose<textarea name="purpose" required rows="3" placeholder="Explain why you need the document."></textarea></label><div class="inline-2"><label>Copies<input name="copies" type="number" min="1" max="10" value="1"></label><label>Delivery<select name="delivery_mode"><option value="digital">Digital</option><option value="physical">Physical</option><option value="both">Both</option></select></label></div><button class="btn primary">Request document</button></form></section></div><div class="two-col"><section class="card section-card"><div class="section-head"><div><h2>Leave & gate requests</h2><p>Decision and routing history.</p></div></div>{% for r in leave %}<div class="list-row"><div><strong>{{r.request_type|replace('_',' ')|title}}</strong><span>{{r.start_at.strftime('%d %b %Y %I:%M %p')}} → {{r.end_at.strftime('%d %b %I:%M %p')}} · {{r.reason|truncate(60)}}</span></div><span class="status {{r.status}}">{{r.status}}</span></div>{% else %}<div class="empty">No requests submitted.</div>{% endfor %}</section><section class="card section-card"><div class="section-head"><div><h2>Document requests</h2><p>Administration processing status.</p></div></div>{% for r in docs %}<div class="list-row"><div><strong>{{r.document_type}}</strong><span>{{r.delivery_mode|title}} · {{r.purpose|truncate(60)}}</span></div><span class="status {{r.status}}">{{r.status}}</span></div>{% else %}<div class="empty">No document requests.</div>{% endfor %}</section></div>{% endblock %}
+{% extends 'base.html' %}{% block title %}Requests · CODE-NOVA CMS{% endblock
+%}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">SELF-SERVICE</div>
+    <h1>Requests</h1>
+    <p>Submit and track leave, gate pass, documents and certificates.</p>
+  </div>
+</div>
+<div class="form-grid two">
+  <section class="card form-card">
+    <h2>Leave / Gate pass</h2>
+    <p class="muted">Route to the correct approver and track the decision.</p>
+    <form
+      method="post"
+      action="{{url_for('student.create_leave')}}"
+      class="stack"
+    >
+      <div class="inline-2">
+        <label
+          >Request type<select name="request_type">
+            <option value="leave">Leave</option>
+            <option value="gate_pass">Gate Pass</option>
+          </select></label
+        ><label
+          >Approval route<select name="approval_route">
+            <option value="warden">Hostel Warden</option>
+            <option value="teacher">Teacher</option>
+            <option value="admin">Administration</option>
+          </select></label
+        >
+      </div>
+      <label
+        >Reason<textarea
+          name="reason"
+          required
+          rows="3"
+          placeholder="Why do you need permission?"
+        ></textarea>
+      </label>
+      <div class="inline-2">
+        <label
+          >Start<input name="start_at" type="datetime-local" required /></label
+        ><label
+          >End<input name="end_at" type="datetime-local" required
+        /></label>
+      </div>
+      <div class="inline-2">
+        <label
+          >Destination<input
+            name="destination"
+            placeholder="Home / market / hospital" /></label
+        ><label
+          >Emergency contact<input
+            name="emergency_contact"
+            placeholder="Phone number"
+        /></label>
+      </div>
+      <button class="btn primary">Submit request</button>
+    </form>
+  </section>
+  <section class="card form-card">
+    <h2>Document / certificate</h2>
+    <p class="muted">Send a request to administration.</p>
+    <form
+      method="post"
+      action="{{url_for('student.create_document')}}"
+      class="stack"
+    >
+      <label
+        >Document type<select name="document_type">
+          <option>Bonafide Certificate</option>
+          <option>Character Certificate</option>
+          <option>Migration Certificate</option>
+          <option>Transfer Certificate</option>
+          <option>Transcript / Marksheet</option>
+          <option>Other</option>
+        </select></label
+      ><label
+        >Purpose<textarea
+          name="purpose"
+          required
+          rows="3"
+          placeholder="Explain why you need the document."
+        ></textarea>
+      </label>
+      <div class="inline-2">
+        <label
+          >Copies<input
+            name="copies"
+            type="number"
+            min="1"
+            max="10"
+            value="1" /></label
+        ><label
+          >Delivery<select name="delivery_mode">
+            <option value="digital">Digital</option>
+            <option value="physical">Physical</option>
+            <option value="both">Both</option>
+          </select></label
+        >
+      </div>
+      <button class="btn primary">Request document</button>
+    </form>
+  </section>
+</div>
+<div class="two-col">
+  <section class="card section-card">
+    <div class="section-head">
+      <div>
+        <h2>Leave & gate requests</h2>
+        <p>Decision and routing history.</p>
+      </div>
+    </div>
+    {% for r in leave %}
+    <div class="list-row">
+      <div>
+        <strong>{{r.request_type|replace('_',' ')|title}}</strong
+        ><span
+          >{{r.start_at.strftime('%d %b %Y %I:%M %p')}} →
+          {{r.end_at.strftime('%d %b %I:%M %p')}} ·
+          {{r.reason|truncate(60)}}</span
+        >
+      </div>
+      <span class="status {{r.status}}">{{r.status}}</span>
+    </div>
+    {% else %}
+    <div class="empty">No requests submitted.</div>
+    {% endfor %}
+  </section>
+  <section class="card section-card">
+    <div class="section-head">
+      <div>
+        <h2>Document requests</h2>
+        <p>Administration processing status.</p>
+      </div>
+    </div>
+    {% for r in docs %}
+    <div class="list-row">
+      <div>
+        <strong>{{r.document_type}}</strong
+        ><span>{{r.delivery_mode|title}} · {{r.purpose|truncate(60)}}</span>
+      </div>
+      <span class="status {{r.status}}">{{r.status}}</span>
+    </div>
+    {% else %}
+    <div class="empty">No document requests.</div>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}

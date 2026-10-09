@@ -1,1 +1,92 @@
-{% extends 'base.html' %}{% block title %}Visitors & Gates · CODE-NOVA CMS{% endblock %}{% block content %}<div class="page-head"><div><div class="eyebrow">HOSTEL SECURITY</div><h1>Visitors & gate logs</h1><p>Request visitor access and keep a transparent record of campus movement.</p></div></div><div class="form-grid two"><section class="card form-card"><h2>Visitor pass</h2><form method="post" action="{{url_for('student.create_visitor')}}" class="stack"><label>Visitor name<input name="visitor_name" required></label><div class="inline-2"><label>Relation<input name="relation" placeholder="Parent / sibling / friend"></label><label>Phone<input name="phone" required inputmode="tel"></label></div><label>Visit date<input name="visit_date" type="date" required></label><label>Purpose<textarea name="purpose" required rows="3"></textarea></label><button class="btn primary">Request visitor pass</button></form></section><section class="card section-card"><h2>Pass history</h2>{% for p in passes %}<div class="list-row"><div><strong>{{p.visitor_name}}</strong><span>{{p.visit_date}} · {{p.purpose|truncate(55)}}</span></div><span class="status {{p.status}}">{{p.status}}</span></div>{% else %}<div class="empty">No visitor passes.</div>{% endfor %}</section></div><section class="card section-card"><div class="section-head"><div><h2>Gate log</h2><p>Recorded entries/exits. Gate staff create scan records after approved permission.</p></div><span class="pill">Student ID {{student.student_id}}</span></div><div class="table-wrap"><table><thead><tr><th>Type</th><th>Direction</th><th>Reference</th><th>Time</th></tr></thead><tbody>{% for l in logs %}<tr><td>{{l.pass_type|replace('_',' ')|title}}</td><td><span class="status {{'approved' if l.direction=='in' else 'processing'}}">{{l.direction|upper}}</span></td><td>{{l.reference_id or '—'}}</td><td>{{l.scanned_at.strftime('%d %b %Y, %I:%M %p')}}</td></tr>{% else %}<tr><td colspan="4" class="empty">No gate movements recorded yet.</td></tr>{% endfor %}</tbody></table></div></section>{% endblock %}
+{% extends 'base.html' %}{% block title %}Visitors & Gates · CODE-NOVA CMS{%
+endblock %}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">HOSTEL SECURITY</div>
+    <h1>Visitors & gate logs</h1>
+    <p>
+      Request visitor access and keep a transparent record of campus movement.
+    </p>
+  </div>
+</div>
+<div class="form-grid two">
+  <section class="card form-card">
+    <h2>Visitor pass</h2>
+    <form
+      method="post"
+      action="{{url_for('student.create_visitor')}}"
+      class="stack"
+    >
+      <label>Visitor name<input name="visitor_name" required /></label>
+      <div class="inline-2">
+        <label
+          >Relation<input
+            name="relation"
+            placeholder="Parent / sibling / friend" /></label
+        ><label>Phone<input name="phone" required inputmode="tel" /></label>
+      </div>
+      <label>Visit date<input name="visit_date" type="date" required /></label
+      ><label
+        >Purpose<textarea name="purpose" required rows="3"></textarea></label
+      ><button class="btn primary">Request visitor pass</button>
+    </form>
+  </section>
+  <section class="card section-card">
+    <h2>Pass history</h2>
+    {% for p in passes %}
+    <div class="list-row">
+      <div>
+        <strong>{{p.visitor_name}}</strong
+        ><span>{{p.visit_date}} · {{p.purpose|truncate(55)}}</span>
+      </div>
+      <span class="status {{p.status}}">{{p.status}}</span>
+    </div>
+    {% else %}
+    <div class="empty">No visitor passes.</div>
+    {% endfor %}
+  </section>
+</div>
+<section class="card section-card">
+  <div class="section-head">
+    <div>
+      <h2>Gate log</h2>
+      <p>
+        Recorded entries/exits. Gate staff create scan records after approved
+        permission.
+      </p>
+    </div>
+    <span class="pill">Student ID {{student.student_id}}</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Direction</th>
+          <th>Reference</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in logs %}
+        <tr>
+          <td>{{l.pass_type|replace('_',' ')|title}}</td>
+          <td>
+            <span
+              class="status {{'approved' if l.direction=='in' else 'processing'}}"
+              >{{l.direction|upper}}</span
+            >
+          </td>
+          <td>{{l.reference_id or '—'}}</td>
+          <td>{{l.scanned_at.strftime('%d %b %Y, %I:%M %p')}}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="4" class="empty">No gate movements recorded yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

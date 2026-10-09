@@ -1,1 +1,119 @@
-{% extends 'base.html' %}{% block title %}Visitors & Gate Logs · CODE-NOVA CMS{% endblock %}{% block content %}<div class="page-head"><div><div class="eyebrow">GATE CONTROL</div><h1>Visitors & Gate Logs</h1><p>{{ warden.hostel }} · approve visitor passes and review movement records.</p></div></div><div class="two-col"><section class="card"><h2>Gate scan</h2><form method="post" action="{{ url_for('warden.gate_scan') }}" class="stack"><input name="student_id" placeholder="Student ID or email" required><select name="direction"><option value="out">OUT — leaving campus</option><option value="in">IN — returning to campus</option></select><button class="btn primary">Record Gate Movement</button></form><p class="tiny-note">Only active students assigned to {{ warden.hostel }} can be scanned.</p></section><section class="card"><h2>Visitor passes</h2><div class="table-wrap"><table><thead><tr><th>Visitor</th><th>Student / Room</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody>{% for v in visitors %}<tr><td><strong>{{ v.visitor_name }}</strong><small class="block">{{ v.relation or '' }} · {{ v.phone }}</small></td><td>{{ v.student_name }}<small class="block">{{ v.room_no }}</small></td><td>{{ v.visit_date }}</td><td><span class="status {{ v.status }}">{{ v.status|title }}</span></td><td>{% if v.status=='pending' %}<form method="post" action="{{ url_for('warden.visitor_decision',visit_id=v.id) }}" class="mini-buttons"><button name="status" value="approved" class="btn success">Approve</button><button name="status" value="rejected" class="btn danger">Reject</button></form>{% else %}—{% endif %}</td></tr>{% else %}<tr><td colspan="5" class="empty">No visitor passes.</td></tr>{% endfor %}</tbody></table></div></section></div><section class="card" style="margin-top:17px"><h2>Recent gate logs</h2><div class="table-wrap"><table><thead><tr><th>Student</th><th>Direction</th><th>Type</th><th>Time</th></tr></thead><tbody>{% for l in logs %}<tr><td>{{ l.student_name }}<small class="block">{{ l.room_no }}</small></td><td>{{ l.direction|upper }}</td><td>{{ l.pass_type|replace('_',' ')|title }}</td><td>{{ l.scanned_at.strftime('%d %b %H:%M') }}</td></tr>{% else %}<tr><td colspan="4" class="empty">No gate logs.</td></tr>{% endfor %}</tbody></table></div></section>{% endblock %}
+{% extends 'base.html' %}{% block title %}Visitors & Gate Logs · CODE-NOVA CMS{%
+endblock %}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">GATE CONTROL</div>
+    <h1>Visitors & Gate Logs</h1>
+    <p>
+      {{ warden.hostel }} · approve visitor passes and review movement records.
+    </p>
+  </div>
+</div>
+<div class="two-col">
+  <section class="card">
+    <h2>Gate scan</h2>
+    <form
+      method="post"
+      action="{{ url_for('warden.gate_scan') }}"
+      class="stack"
+    >
+      <input
+        name="student_id"
+        placeholder="Student ID or email"
+        required
+      /><select name="direction">
+        <option value="out">OUT — leaving campus</option>
+        <option value="in">IN — returning to campus</option></select
+      ><button class="btn primary">Record Gate Movement</button>
+    </form>
+    <p class="tiny-note">
+      Only active students assigned to {{ warden.hostel }} can be scanned.
+    </p>
+  </section>
+  <section class="card">
+    <h2>Visitor passes</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Visitor</th>
+            <th>Student / Room</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in visitors %}
+          <tr>
+            <td>
+              <strong>{{ v.visitor_name }}</strong
+              ><small class="block"
+                >{{ v.relation or '' }} · {{ v.phone }}</small
+              >
+            </td>
+            <td>
+              {{ v.student_name }}<small class="block">{{ v.room_no }}</small>
+            </td>
+            <td>{{ v.visit_date }}</td>
+            <td>
+              <span class="status {{ v.status }}">{{ v.status|title }}</span>
+            </td>
+            <td>
+              {% if v.status=='pending' %}
+              <form
+                method="post"
+                action="{{ url_for('warden.visitor_decision',visit_id=v.id) }}"
+                class="mini-buttons"
+              >
+                <button name="status" value="approved" class="btn success">
+                  Approve</button
+                ><button name="status" value="rejected" class="btn danger">
+                  Reject
+                </button>
+              </form>
+              {% else %}—{% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="5" class="empty">No visitor passes.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+<section class="card" style="margin-top: 17px">
+  <h2>Recent gate logs</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Direction</th>
+          <th>Type</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in logs %}
+        <tr>
+          <td>
+            {{ l.student_name }}<small class="block">{{ l.room_no }}</small>
+          </td>
+          <td>{{ l.direction|upper }}</td>
+          <td>{{ l.pass_type|replace('_',' ')|title }}</td>
+          <td>{{ l.scanned_at.strftime('%d %b %H:%M') }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="4" class="empty">No gate logs.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

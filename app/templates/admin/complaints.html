@@ -1,4 +1,134 @@
-{% extends 'base.html' %}{% block title %}Complaint Control · CODE-NOVA CMS Admin{% endblock %}{% block content %}
-<div class="page-head"><div><div class="eyebrow">ADMIN</div><h1>Complaint & Maintenance Control</h1><p>Assign the right staff member, track ageing, and explicitly escalate approved-but-unresolved issues.</p></div><div class="filter-tabs"><a class="{{ 'active' if current_status=='open' else '' }}" href="{{ url_for('admin.complaints',status='open') }}">Open</a><a class="{{ 'active' if current_status=='ageing' else '' }}" href="{{ url_for('admin.complaints',status='ageing') }}">Ageing</a><a class="{{ 'active' if current_status=='closed' else '' }}" href="{{ url_for('admin.complaints',status='closed') }}">Closed</a><a class="{{ 'active' if current_status=='all' else '' }}" href="{{ url_for('admin.complaints',status='all') }}">All</a></div></div>
-<section class="card"><div class="table-wrap"><table><thead><tr><th>Ticket</th><th>Student / Room</th><th>Issue</th><th>Department</th><th>Age</th><th>Assign</th><th>Status</th></tr></thead><tbody>{% for c in complaints %}<tr><td><strong>{{ c.ticket_no }}</strong><small class="block">{{ c.created_at.strftime('%d %b %Y %H:%M') }}</small></td><td><strong>{{ c.student_name }}</strong><small class="block">{{ c.room_no or '—' }} · {{ c.student_id }}</small></td><td>{{ c.title }}<small class="block">{{ c.details }}</small></td><td>{{ c.department }}<small class="block">Started {{ c.started_days }} day(s) ago</small></td><td><strong>{{ c.age_days }}d</strong></td><td><form method="post" action="{{ url_for('admin.complaint_update',complaint_id=c.id) }}" class="mini-form"><input type="hidden" name="return_status" value="{{ current_status }}"><select name="assigned_to"><option value="">Unassigned</option>{% for s in staff %}<option value="{{ s.id }}" {% if c.assigned_to==s.id %}selected{% endif %}>{{ s.name }} · {{ s.role|title }}</option>{% endfor %}</select><button class="btn primary">Assign</button></form></td><td><form method="post" action="{{ url_for('admin.complaint_update',complaint_id=c.id) }}" class="mini-form"><input type="hidden" name="return_status" value="{{ current_status }}"><input type="hidden" name="assigned_to" value="{{ c.assigned_to or '' }}"><select name="status"><option value="submitted" {% if c.status=='submitted' %}selected{% endif %}>Submitted</option><option value="approved" {% if c.status=='approved' %}selected{% endif %}>Approved</option><option value="in_progress" {% if c.status=='in_progress' %}selected{% endif %}>In progress</option><option value="approved_not_resolved" {% if c.status=='approved_not_resolved' %}selected{% endif %}>Approved · Not resolved</option><option value="resolved" {% if c.status=='resolved' %}selected{% endif %}>Resolved</option><option value="rejected" {% if c.status=='rejected' %}selected{% endif %}>Rejected</option></select><button class="btn ghost">Save</button></form></td></tr>{% else %}<tr><td colspan="7" class="empty">No complaints match this view.</td></tr>{% endfor %}</tbody></table></div></section>
+{% extends 'base.html' %}{% block title %}Complaint Control · CODE-NOVA CMS
+Admin{% endblock %}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">ADMIN</div>
+    <h1>Complaint & Maintenance Control</h1>
+    <p>
+      Assign the right staff member, track ageing, and explicitly escalate
+      approved-but-unresolved issues.
+    </p>
+  </div>
+  <div class="filter-tabs">
+    <a
+      class="{{ 'active' if current_status=='open' else '' }}"
+      href="{{ url_for('admin.complaints',status='open') }}"
+      >Open</a
+    ><a
+      class="{{ 'active' if current_status=='ageing' else '' }}"
+      href="{{ url_for('admin.complaints',status='ageing') }}"
+      >Ageing</a
+    ><a
+      class="{{ 'active' if current_status=='closed' else '' }}"
+      href="{{ url_for('admin.complaints',status='closed') }}"
+      >Closed</a
+    ><a
+      class="{{ 'active' if current_status=='all' else '' }}"
+      href="{{ url_for('admin.complaints',status='all') }}"
+      >All</a
+    >
+  </div>
+</div>
+<section class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Ticket</th>
+          <th>Student / Room</th>
+          <th>Issue</th>
+          <th>Department</th>
+          <th>Age</th>
+          <th>Assign</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in complaints %}
+        <tr>
+          <td>
+            <strong>{{ c.ticket_no }}</strong
+            ><small class="block"
+              >{{ c.created_at.strftime('%d %b %Y %H:%M') }}</small
+            >
+          </td>
+          <td>
+            <strong>{{ c.student_name }}</strong
+            ><small class="block"
+              >{{ c.room_no or '—' }} · {{ c.student_id }}</small
+            >
+          </td>
+          <td>{{ c.title }}<small class="block">{{ c.details }}</small></td>
+          <td>
+            {{ c.department }}<small class="block"
+              >Started {{ c.started_days }} day(s) ago</small
+            >
+          </td>
+          <td><strong>{{ c.age_days }}d</strong></td>
+          <td>
+            <form
+              method="post"
+              action="{{ url_for('admin.complaint_update',complaint_id=c.id) }}"
+              class="mini-form"
+            >
+              <input
+                type="hidden"
+                name="return_status"
+                value="{{ current_status }}"
+              /><select name="assigned_to">
+                <option value="">Unassigned</option>
+                {% for s in staff %}
+                <option value="{{ s.id }}" {% if c.assigned_to == s.id %}selected{% endif %}>
+                  {{ s.name }} · {{ s.role|title }}
+                </option>
+                {% endfor %}</select
+              ><button class="btn primary">Assign</button>
+            </form>
+          </td>
+          <td>
+            <form
+              method="post"
+              action="{{ url_for('admin.complaint_update',complaint_id=c.id) }}"
+              class="mini-form"
+            >
+              <input
+                type="hidden"
+                name="return_status"
+                value="{{ current_status }}"
+              /><input
+                type="hidden"
+                name="assigned_to"
+                value="{{ c.assigned_to or '' }}"
+              /><select name="status">
+                <option value="submitted" {% if c.status == 'submitted' %}selected{% endif %}>
+                  Submitted
+                </option>
+                <option value="approved" {% if c.status == 'approved' %}selected{% endif %}>
+                  Approved
+                </option>
+                <option value="in_progress" {% if c.status == 'in_progress' %}selected{% endif %}>
+                  In progress
+                </option>
+                <option value="approved_not_resolved" {% if c.status == 'approved_not_resolved' %}selected{% endif %}>
+                  Approved · Not resolved
+                </option>
+                <option value="resolved" {% if c.status == 'resolved' %}selected{% endif %}>
+                  Resolved
+                </option>
+                <option value="rejected" {% if c.status == 'rejected' %}selected{% endif %}>
+                  Rejected
+                </option></select
+              ><button class="btn ghost">Save</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" class="empty">No complaints match this view.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
 {% endblock %}

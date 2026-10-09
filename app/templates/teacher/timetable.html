@@ -1,1 +1,76 @@
-{% extends 'base.html' %}{% block title %}Faculty Timetable · CODE-NOVA CMS{% endblock %}{% block content %}<div class="page-head"><div><div class="eyebrow">ACADEMICS</div><h1>Timetable</h1><p>Create class slots for your branch.</p></div></div><div class="two-col"><section class="card"><h2>Add class</h2><form method="post" class="stack"><div class="inline-2"><input type="number" name="year" min="1" max="4" placeholder="Year" required><input name="section" placeholder="Section" value="A"></div><div class="inline-2"><select name="day_of_week">{% for n,d in [(1,'Monday'),(2,'Tuesday'),(3,'Wednesday'),(4,'Thursday'),(5,'Friday'),(6,'Saturday')] %}<option value="{{ n }}">{{ d }}</option>{% endfor %}</select><input name="subject" placeholder="Subject" required></div><div class="inline-2"><input type="time" name="start_time" required><input type="time" name="end_time" required></div><input name="room" placeholder="Room / Lab"><button class="btn primary">Add to timetable</button></form></section><section class="card"><h2>Published timetable</h2><div class="table-wrap"><table><thead><tr><th>Year</th><th>Day</th><th>Time</th><th>Subject</th><th>Room</th></tr></thead><tbody>{% for r in timetable %}<tr><td>{{ r.year }}</td><td>{{ ['','Mon','Tue','Wed','Thu','Fri','Sat','Sun'][r.day_of_week] }}</td><td>{{ r.start_time }}–{{ r.end_time }}</td><td>{{ r.subject }}</td><td>{{ r.room }}</td></tr>{% endfor %}</tbody></table></div></section></div>{% endblock %}
+{% extends 'base.html' %}{% block title %}Faculty Timetable · CODE-NOVA CMS{%
+endblock %}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">ACADEMICS</div>
+    <h1>Timetable</h1>
+    <p>Create class slots for your branch.</p>
+  </div>
+</div>
+<div class="two-col">
+  <section class="card">
+    <h2>Add class</h2>
+    <form method="post" class="stack">
+      <div class="inline-2">
+        <input
+          type="number"
+          name="year"
+          min="1"
+          max="4"
+          placeholder="Year"
+          required
+        /><input name="section" placeholder="Section" value="A" />
+      </div>
+      <div class="inline-2">
+        <select name="day_of_week">
+          {% for n,d in
+          [(1,'Monday'),(2,'Tuesday'),(3,'Wednesday'),(4,'Thursday'),(5,'Friday'),(6,'Saturday')]
+          %}
+          <option value="{{ n }}">{{ d }}</option>
+          {% endfor %}</select
+        ><input name="subject" placeholder="Subject" required />
+      </div>
+      <div class="inline-2">
+        <input type="time" name="start_time" required /><input
+          type="time"
+          name="end_time"
+          required
+        />
+      </div>
+      <input name="room" placeholder="Room / Lab" /><button class="btn primary">
+        Add to timetable
+      </button>
+    </form>
+  </section>
+  <section class="card">
+    <h2>Published timetable</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Subject</th>
+            <th>Room</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in timetable %}
+          <tr>
+            <td>{{ r.year }}</td>
+            <td>
+              {{ ['','Mon','Tue','Wed','Thu','Fri','Sat','Sun'][r.day_of_week]
+              }}
+            </td>
+            <td>{{ r.start_time }}–{{ r.end_time }}</td>
+            <td>{{ r.subject }}</td>
+            <td>{{ r.room }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

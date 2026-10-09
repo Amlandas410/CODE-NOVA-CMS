@@ -1,6 +1,161 @@
-{% extends 'base.html' %}{% block title %}Academics · CODE-NOVA CMS Admin{% endblock %}{% block content %}
-<div class="page-head"><div><div class="eyebrow">ACADEMICS</div><h1>Timetable & Class Updates</h1><p>Publish timetable entries and operational class changes from one admin console.</p></div></div>
-<div class="two-col admin-grid"><section class="card"><div class="section-head"><div><h2>Publish Class Update</h2><p>Students matching the target fields will see it in Class Updates.</p></div></div><form method="post" action="{{ url_for('admin.academic_update') }}" class="form-grid two"><label>Title<input name="title" required></label><label>Type<select name="update_type"><option value="general">General</option><option value="room_change">Room change</option><option value="class_suspend">Class suspended</option><option value="class_change">Class change</option><option value="teacher_absent">Teacher absent</option><option value="extra_class">Extra class</option></select></label><label class="full">Message<textarea name="body" rows="4" required></textarea></label><label>Batch<input name="target_batch" placeholder="Optional"></label><label>Branch<select name="target_branch"><option value="">All branches</option>{% for b in branches %}<option>{{ b.branch }}</option>{% endfor %}</select></label><label>Year<input type="number" min="1" max="8" name="target_year"></label><label>Start date/time<input type="datetime-local" name="starts_at"></label><div class="full"><button class="btn primary">Publish update</button></div></form></section>
-<section class="card"><div class="section-head"><div><h2>Add Timetable Slot</h2><p>The student timetable reads directly from these records.</p></div></div><form method="post" action="{{ url_for('admin.timetable_create') }}" class="form-grid two"><label>Branch<select name="branch" required>{% for b in branches %}<option>{{ b.branch }}</option>{% endfor %}</select></label><label>Year<input type="number" name="year" min="1" max="8" value="3" required></label><label>Day<select name="day_of_week"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="7">Sunday</option></select></label><label>Section<input name="section" value="A"></label><label>Start<input type="time" name="start_time" required></label><label>End<input type="time" name="end_time" required></label><label>Subject<input name="subject" required></label><label>Room<input name="room"></label><label class="full">Teacher<input name="teacher_name"></label><div class="full"><button class="btn primary">Add timetable slot</button></div></form></section></div>
-<div class="two-col admin-grid"><section class="card"><div class="section-head"><div><h2>Recent Class Updates</h2></div></div><div class="compact-list">{% for u in updates %}<div class="compact-item"><div><strong>{{ u.title }}</strong><small>{{ u.update_type|replace('_',' ')|title }} · {{ u.target_branch or 'All branches' }}{% if u.target_year %} · Year {{ u.target_year }}{% endif %}</small></div><span class="tag">{{ u.created_at.strftime('%d %b') }}</span></div>{% else %}<div class="empty">No updates.</div>{% endfor %}</div></section><section class="card"><div class="section-head"><div><h2>Timetable Records</h2></div></div><div class="table-wrap"><table><thead><tr><th>Day</th><th>Time</th><th>Subject</th><th>Room</th><th>Branch / Year</th></tr></thead><tbody>{% set days={1:'Mon',2:'Tue',3:'Wed',4:'Thu',5:'Fri',6:'Sat',7:'Sun'} %}{% for t in timetable %}<tr><td>{{ days[t.day_of_week] }}</td><td>{{ t.start_time }}–{{ t.end_time }}</td><td><strong>{{ t.subject }}</strong><small class="block">{{ t.teacher_name or '' }}</small></td><td>{{ t.room or '—' }}</td><td>{{ t.branch }} · {{ t.year }}</td></tr>{% endfor %}</tbody></table></div></section></div>
+{% extends 'base.html' %}{% block title %}Academics · CODE-NOVA CMS Admin{%
+endblock %}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">ACADEMICS</div>
+    <h1>Timetable & Class Updates</h1>
+    <p>
+      Publish timetable entries and operational class changes from one admin
+      console.
+    </p>
+  </div>
+</div>
+<div class="two-col admin-grid">
+  <section class="card">
+    <div class="section-head">
+      <div>
+        <h2>Publish Class Update</h2>
+        <p>Students matching the target fields will see it in Class Updates.</p>
+      </div>
+    </div>
+    <form
+      method="post"
+      action="{{ url_for('admin.academic_update') }}"
+      class="form-grid two"
+    >
+      <label>Title<input name="title" required /></label
+      ><label
+        >Type<select name="update_type">
+          <option value="general">General</option>
+          <option value="room_change">Room change</option>
+          <option value="class_suspend">Class suspended</option>
+          <option value="class_change">Class change</option>
+          <option value="teacher_absent">Teacher absent</option>
+          <option value="extra_class">Extra class</option>
+        </select></label
+      ><label class="full"
+        >Message<textarea name="body" rows="4" required></textarea></label
+      ><label>Batch<input name="target_batch" placeholder="Optional" /></label
+      ><label
+        >Branch<select name="target_branch">
+          <option value="">All branches</option>
+          {% for b in branches %}
+          <option>{{ b.branch }}</option>
+          {% endfor %}
+        </select></label
+      ><label
+        >Year<input type="number" min="1" max="8" name="target_year" /></label
+      ><label
+        >Start date/time<input type="datetime-local" name="starts_at"
+      /></label>
+      <div class="full">
+        <button class="btn primary">Publish update</button>
+      </div>
+    </form>
+  </section>
+  <section class="card">
+    <div class="section-head">
+      <div>
+        <h2>Add Timetable Slot</h2>
+        <p>The student timetable reads directly from these records.</p>
+      </div>
+    </div>
+    <form
+      method="post"
+      action="{{ url_for('admin.timetable_create') }}"
+      class="form-grid two"
+    >
+      <label
+        >Branch<select name="branch" required>
+          {% for b in branches %}
+          <option>{{ b.branch }}</option>
+          {% endfor %}
+        </select></label
+      ><label
+        >Year<input
+          type="number"
+          name="year"
+          min="1"
+          max="8"
+          value="3"
+          required /></label
+      ><label
+        >Day<select name="day_of_week">
+          <option value="1">Monday</option>
+          <option value="2">Tuesday</option>
+          <option value="3">Wednesday</option>
+          <option value="4">Thursday</option>
+          <option value="5">Friday</option>
+          <option value="6">Saturday</option>
+          <option value="7">Sunday</option>
+        </select></label
+      ><label>Section<input name="section" value="A" /></label
+      ><label>Start<input type="time" name="start_time" required /></label
+      ><label>End<input type="time" name="end_time" required /></label
+      ><label>Subject<input name="subject" required /></label
+      ><label>Room<input name="room" /></label
+      ><label class="full">Teacher<input name="teacher_name" /></label>
+      <div class="full">
+        <button class="btn primary">Add timetable slot</button>
+      </div>
+    </form>
+  </section>
+</div>
+<div class="two-col admin-grid">
+  <section class="card">
+    <div class="section-head">
+      <div><h2>Recent Class Updates</h2></div>
+    </div>
+    <div class="compact-list">
+      {% for u in updates %}
+      <div class="compact-item">
+        <div>
+          <strong>{{ u.title }}</strong
+          ><small
+            >{{ u.update_type|replace('_',' ')|title }} · {{ u.target_branch or
+            'All branches' }}{% if u.target_year %} · Year {{ u.target_year }}{%
+            endif %}</small
+          >
+        </div>
+        <span class="tag">{{ u.created_at.strftime('%d %b') }}</span>
+      </div>
+      {% else %}
+      <div class="empty">No updates.</div>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="card">
+    <div class="section-head">
+      <div><h2>Timetable Records</h2></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Subject</th>
+            <th>Room</th>
+            <th>Branch / Year</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% set days={1:'Mon',2:'Tue',3:'Wed',4:'Thu',5:'Fri',6:'Sat',7:'Sun'}
+          %}{% for t in timetable %}
+          <tr>
+            <td>{{ days[t.day_of_week] }}</td>
+            <td>{{ t.start_time }}–{{ t.end_time }}</td>
+            <td>
+              <strong>{{ t.subject }}</strong
+              ><small class="block">{{ t.teacher_name or '' }}</small>
+            </td>
+            <td>{{ t.room or '—' }}</td>
+            <td>{{ t.branch }} · {{ t.year }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
 {% endblock %}

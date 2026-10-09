@@ -49,3 +49,22 @@ def test_secure_cookie_setting_is_environment_driven(monkeypatch):
     monkeypatch.setenv('SESSION_COOKIE_SECURE', '0')
     app = create_app()
     assert app.config['SESSION_COOKIE_SECURE'] is False
+
+
+def test_admin_request_and_complaint_pages_render_without_database(monkeypatch):
+    import app.admin as admin_module
+
+    def fake_query(sql, params=(), one=False, dictionary=True):
+        return {'id': 1} if one else []
+
+    monkeypatch.setattr(admin_module, 'query', fake_query)
+    app = create_app()
+    app.config['TESTING'] = True
+    client = app.test_client()
+
+    with client.session_transaction() as session:
+        session['role'] = 'admin'
+        session['user_id'] = 1
+
+    assert client.get('/admin/requests').status_code == 200
+    assert client.get('/admin/complaints').status_code == 200

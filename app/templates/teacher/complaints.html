@@ -1,1 +1,60 @@
-{% extends 'base.html' %}{% block title %}Service Tickets · CODE-NOVA CMS{% endblock %}{% block content %}<div class="page-head"><div><div class="eyebrow">SERVICE IN-CHARGE</div><h1>Service Tickets</h1><p>Handle complaints assigned to your department or you.</p></div></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Ticket</th><th>Student / Room</th><th>Category</th><th>Issue</th><th>Age</th><th>Action</th></tr></thead><tbody>{% for c in complaints %}<tr><td><strong>{{ c.ticket_no }}</strong><small class="block">{{ c.status|replace('_',' ')|title }}</small></td><td>{{ c.student_name }}<small class="block">{{ c.room_no }}</small></td><td>{{ c.category|title }}</td><td>{{ c.title }}</td><td>{{ c.age_days }}d</td><td><form method="post" action="{{ url_for('teacher.complaint_update',complaint_id=c.id) }}" class="mini-buttons"><select name="status"><option value="in_progress">In progress</option><option value="approved_not_resolved">Escalate</option><option value="resolved">Resolved</option><option value="rejected">Reject</option></select><button class="btn primary">Update</button></form></td></tr>{% else %}<tr><td colspan="6" class="empty">No service tickets.</td></tr>{% endfor %}</tbody></table></div></div>{% endblock %}
+{% extends 'base.html' %}{% block title %}Service Tickets · CODE-NOVA CMS{%
+endblock %}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">SERVICE IN-CHARGE</div>
+    <h1>Service Tickets</h1>
+    <p>Handle complaints assigned to your department or you.</p>
+  </div>
+</div>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Ticket</th>
+          <th>Student / Room</th>
+          <th>Category</th>
+          <th>Issue</th>
+          <th>Age</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in complaints %}
+        <tr>
+          <td>
+            <strong>{{ c.ticket_no }}</strong
+            ><small class="block">{{ c.status|replace('_',' ')|title }}</small>
+          </td>
+          <td>
+            {{ c.student_name }}<small class="block">{{ c.room_no }}</small>
+          </td>
+          <td>{{ c.category|title }}</td>
+          <td>{{ c.title }}</td>
+          <td>{{ c.age_days }}d</td>
+          <td>
+            <form
+              method="post"
+              action="{{ url_for('teacher.complaint_update',complaint_id=c.id) }}"
+              class="mini-buttons"
+            >
+              <select name="status">
+                <option value="in_progress">In progress</option>
+                <option value="approved_not_resolved">Escalate</option>
+                <option value="resolved">Resolved</option>
+                <option value="rejected">Reject</option></select
+              ><button class="btn primary">Update</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="empty">No service tickets.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

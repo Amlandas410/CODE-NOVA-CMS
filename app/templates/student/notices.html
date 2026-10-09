@@ -1,2 +1,50 @@
-{% extends 'base.html' %}{% block title %}Notices · CODE-NOVA CMS{% endblock %}{% block content %}<div class="page-head"><div><div class="eyebrow">COMMUNICATION</div><h1>Notices & announcements</h1><p>Targeted to your batch, branch, year and hostel with read/action tracking.</p></div></div><div class="notice-grid">{% for n in notices %}<article class="card notice-card" id="notice-{{n.id}}"><div class="notice-top"><span class="priority {{n.priority}}"></span><span>{{n.sender_role|title}}</span><time>{{n.created_at.strftime('%d %b %Y')}}</time></div><h2>{{n.title}}</h2><p>{{n.body}}</p><div class="notice-actions">{% if n.action_label %}<a class="btn small primary" href="{{n.action_url or '#'}}" onclick="noticeAction({{n.id}})">{{n.action_label}}</a>{% endif %}<button class="btn small ghost" onclick="noticeRead({{n.id}}, this)">{{'Read ✓' if n.read_at else 'Mark as read'}}</button></div></article>{% else %}<div class="card empty">No notices are currently targeted to you.</div>{% endfor %}</div>{% endblock %}
-{% block scripts %}<script>async function noticeRead(id,el){await fetch('/student/notices/'+id+'/read',{method:'POST'});el.textContent='Read ✓'}async function noticeAction(id){await fetch('/student/notices/'+id+'/action',{method:'POST'})}</script>{% endblock %}
+{% extends 'base.html' %}{% block title %}Notices · CODE-NOVA CMS{% endblock
+%}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">COMMUNICATION</div>
+    <h1>Notices & announcements</h1>
+    <p>
+      Targeted to your batch, branch, year and hostel with read/action tracking.
+    </p>
+  </div>
+</div>
+<div class="notice-grid">
+  {% for n in notices %}
+  <article class="card notice-card" id="notice-{{n.id}}">
+    <div class="notice-top">
+      <span class="priority {{n.priority}}"></span
+      ><span>{{n.sender_role|title}}</span
+      ><time>{{n.created_at.strftime('%d %b %Y')}}</time>
+    </div>
+    <h2>{{n.title}}</h2>
+    <p>{{n.body}}</p>
+    <div class="notice-actions">
+      {% if n.action_label %}<a
+        class="btn small primary"
+        href="{{n.action_url or '#'}}"
+        onclick="noticeAction({{n.id}})"
+        >{{n.action_label}}</a
+      >{% endif %}<button
+        class="btn small ghost"
+        onclick="noticeRead({{n.id}}, this)"
+      >
+        {{'Read ✓' if n.read_at else 'Mark as read'}}
+      </button>
+    </div>
+  </article>
+  {% else %}
+  <div class="card empty">No notices are currently targeted to you.</div>
+  {% endfor %}
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  async function noticeRead(id, el) {
+    await fetch("/student/notices/" + id + "/read", { method: "POST" });
+    el.textContent = "Read ✓";
+  }
+  async function noticeAction(id) {
+    await fetch("/student/notices/" + id + "/action", { method: "POST" });
+  }
+</script>
+{% endblock %}

@@ -1,1 +1,59 @@
-{% extends 'base.html' %}{% block title %}Hostel Notices · CODE-NOVA CMS{% endblock %}{% block content %}<div class="page-head"><div><div class="eyebrow">HOSTEL COMMUNICATION</div><h1>Hostel Notices</h1><p>Target residents in {{ warden.hostel }} by year or batch.</p></div></div><div class="two-col"><section class="card"><h2>Publish notice</h2><form method="post" class="stack"><input name="title" placeholder="Notice title" required><textarea name="body" rows="5" placeholder="Announcement" required></textarea><div class="inline-2"><input name="target_year" type="number" min="1" max="4" placeholder="Year"><select name="target_batch"><option value="">All batches</option>{% for r in residents %}<option value="{{ r.batch }}">{{ r.batch }} · Year {{ r.year }}</option>{% endfor %}</select></div><select name="priority"><option>normal</option><option>important</option><option>urgent</option></select><button class="btn primary">Publish</button></form></section><section class="card"><h2>Sent notices</h2>{% for n in notices %}<div class="ticket"><div class="ticket-head"><strong>{{ n.priority|title }}</strong><span>{{ n.created_at.strftime('%d %b') }}</span></div><h3>{{ n.title }}</h3><p>{{ n.body }}</p></div>{% else %}<div class="empty">No notices yet.</div>{% endfor %}</section></div>{% endblock %}
+{% extends 'base.html' %}{% block title %}Hostel Notices · CODE-NOVA CMS{%
+endblock %}{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">HOSTEL COMMUNICATION</div>
+    <h1>Hostel Notices</h1>
+    <p>Target residents in {{ warden.hostel }} by year or batch.</p>
+  </div>
+</div>
+<div class="two-col">
+  <section class="card">
+    <h2>Publish notice</h2>
+    <form method="post" class="stack">
+      <input name="title" placeholder="Notice title" required /><textarea
+        name="body"
+        rows="5"
+        placeholder="Announcement"
+        required
+      ></textarea>
+      <div class="inline-2">
+        <input
+          name="target_year"
+          type="number"
+          min="1"
+          max="4"
+          placeholder="Year"
+        /><select name="target_batch">
+          <option value="">All batches</option>
+          {% for r in residents %}
+          <option value="{{ r.batch }}">
+            {{ r.batch }} · Year {{ r.year }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <select name="priority">
+        <option>normal</option>
+        <option>important</option>
+        <option>urgent</option></select
+      ><button class="btn primary">Publish</button>
+    </form>
+  </section>
+  <section class="card">
+    <h2>Sent notices</h2>
+    {% for n in notices %}
+    <div class="ticket">
+      <div class="ticket-head">
+        <strong>{{ n.priority|title }}</strong
+        ><span>{{ n.created_at.strftime('%d %b') }}</span>
+      </div>
+      <h3>{{ n.title }}</h3>
+      <p>{{ n.body }}</p>
+    </div>
+    {% else %}
+    <div class="empty">No notices yet.</div>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}

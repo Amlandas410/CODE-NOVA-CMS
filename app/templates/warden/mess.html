@@ -1,1 +1,57 @@
-{% extends 'base.html' %}{% block title %}Mess · CODE-NOVA CMS{% endblock %}{% block content %}<div class="page-head"><div><div class="eyebrow">MESS OPERATIONS</div><h1>Menu & Feedback</h1><p>Publish menu items and monitor suggestions from {{ warden.hostel }} residents.</p></div></div><div class="two-col"><section class="card"><h2>Add / update menu</h2><form method="post" class="stack"><input type="date" name="menu_date" value="{{ today }}" required><select name="meal_type"><option>breakfast</option><option>lunch</option><option>snacks</option><option>dinner</option></select><textarea name="items" rows="4" placeholder="e.g. Rice, Dalma, Veg Curry, Curd" required></textarea><button class="btn primary">Save Menu</button></form><h2 style="margin-top:22px">Published menu</h2>{% for m in menu %}<div class="compact-item"><div><strong>{{ m.menu_date }} · {{ m.meal_type|title }}</strong><small>{{ m['items'] }}</small></div></div>{% endfor %}</section><section class="card"><h2>Resident feedback</h2>{% for f in feedback %}<div class="ticket"><div class="ticket-head"><strong>{{ f.rating }}/5 · {{ f.student_name }}</strong><span>{{ f.created_at.strftime('%d %b') }}</span></div><p>{{ f.suggestion or 'No suggestion provided.' }}</p></div>{% else %}<div class="empty">No feedback yet.</div>{% endfor %}</section></div>{% endblock %}
+{% extends 'base.html' %}{% block title %}Mess · CODE-NOVA CMS{% endblock %}{%
+block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">MESS OPERATIONS</div>
+    <h1>Menu & Feedback</h1>
+    <p>
+      Publish menu items and monitor suggestions from {{ warden.hostel }}
+      residents.
+    </p>
+  </div>
+</div>
+<div class="two-col">
+  <section class="card">
+    <h2>Add / update menu</h2>
+    <form method="post" class="stack">
+      <input type="date" name="menu_date" value="{{ today }}" required /><select
+        name="meal_type"
+      >
+        <option>breakfast</option>
+        <option>lunch</option>
+        <option>snacks</option>
+        <option>dinner</option></select
+      ><textarea
+        name="items"
+        rows="4"
+        placeholder="e.g. Rice, Dalma, Veg Curry, Curd"
+        required
+      ></textarea
+      ><button class="btn primary">Save Menu</button>
+    </form>
+    <h2 style="margin-top: 22px">Published menu</h2>
+    {% for m in menu %}
+    <div class="compact-item">
+      <div>
+        <strong>{{ m.menu_date }} · {{ m.meal_type|title }}</strong
+        ><small>{{ m['items'] }}</small>
+      </div>
+    </div>
+    {% endfor %}
+  </section>
+  <section class="card">
+    <h2>Resident feedback</h2>
+    {% for f in feedback %}
+    <div class="ticket">
+      <div class="ticket-head">
+        <strong>{{ f.rating }}/5 · {{ f.student_name }}</strong
+        ><span>{{ f.created_at.strftime('%d %b') }}</span>
+      </div>
+      <p>{{ f.suggestion or 'No suggestion provided.' }}</p>
+    </div>
+    {% else %}
+    <div class="empty">No feedback yet.</div>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}
