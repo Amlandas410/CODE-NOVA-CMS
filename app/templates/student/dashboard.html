@@ -2,7 +2,7 @@
 %} {% block content %}
 <div class="hero">
   <div>
-    <div class="eyebrow">MONDAY · CAMPUS OVERVIEW</div>
+    <div class="eyebrow">SATURDAY · CAMPUS OVERVIEW</div>
     <h1>
       <span
         id="dashboard-greeting"
@@ -162,6 +162,47 @@
     </div>
     {% endfor %}
   </div>
+</section>
+<section class="card section-card">
+  <div class="section-head">
+    <div>
+      <h2>Room &amp; assets</h2>
+      <p>Your assigned hostel room and recorded inventory.</p>
+    </div>
+    <a href="{{ url_for('student.hostel') }}">Full room details →</a>
+  </div>
+  {% if room %}
+  <div class="room-banner">
+    <div>
+      <span>{{ room[0].hostel }}</span>
+      <h2>Room {{ room[0].room_no }}</h2>
+      <p>
+        Floor {{ room[0].floor or '—' }} · Capacity {{ room[0].capacity }} ·
+        Warden {{ room[0].warden_name or '—' }}
+      </p>
+    </div>
+  </div>
+  {% if room[0].asset_name %}
+  <div class="asset-grid">
+    {% for asset in room if asset.asset_name %}
+    <div class="asset">
+      <div class="asset-icon">◈</div>
+      <strong>{{ asset.asset_name }}</strong>
+      <span>Code: {{ asset.asset_code or '—' }}</span>
+      <span>Qty: {{ asset.quantity }}</span>
+      <small
+        class="health {{ 'good' if asset.condition_status == 'good' else 'warn' if asset.condition_status == 'fair' else 'bad' }}"
+        >{{ asset.condition_status|title }}</small
+      >
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">No assets have been recorded for this room yet.</div>
+  {% endif %}
+  {% else %}
+  <div class="empty">No room record has been assigned yet.</div>
+  {% endif %}
 </section>
 <div class="access-strip">
   <div>

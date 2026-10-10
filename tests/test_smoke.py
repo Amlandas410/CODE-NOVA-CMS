@@ -72,3 +72,59 @@ def test_admin_request_and_complaint_pages_render_without_database(monkeypatch):
 
     assert client.get('/admin/requests').status_code == 200
     assert client.get('/admin/complaints').status_code == 200
+
+
+def test_student_dashboard_shows_assigned_room_and_assets(monkeypatch):
+    import app.student as student_module
+
+    student = {
+        'id': 1,
+        'name': 'Test Student',
+        'hostel': 'Boys Hostel A',
+        'room_no': 'A-204',
+        'batch': '2023-27',
+        'branch': 'CSE',
+        'year': 3,
+    }
+    room = [{
+        'hostel': 'Boys Hostel A',
+        'room_no': 'A-204',
+        'floor': '2',
+        'capacity': 3,
+        'warden_name': 'Test Warden',
+        'asset_name': 'Ceiling Fan',
+        'asset_code': 'A204-01',
+        'quantity': 1,
+        'condition_status': 'good',
+    }]
+
+    def fake_query(sql, params=(), one=False, dictionary=True):
+        if 'FROM users' in sql:
+            return student
+        if 'FROM rooms r LEFT JOIN assets' in sql:
+            return room
+        if 'COUNT(*) AS c' in sql:
+            return {'c': 0}
+        return None if one else []
+
+    monkeypatch.setattr(student_module, 'query', fake_query)
+    monkeypatch.setattr(student_module, 'execute', lambda *args, **kwargs: None)
+    monkeypatch.setattr(student_module, 'refresh_aging_complaints', lambda: None)
+    monkeypatch.setattr(student_module, 'attendance_data', lambda student_id: ([], 0))
+
+    app = create_app()
+    app.config['TESTING'] = True
+    client = app.test_client()
+
+    with client.session_transaction() as session:
+        session['role'] = 'student'
+        session['user_id'] = student['id']
+
+    response = client.get('/student/dashboard')
+
+    assert response.status_code == 200
+    assert b'Room &amp; assets' in response.data
+    assert b'Boys Hostel A' in response.data
+    assert b'A-204' in response.data
+    assert b'Ceiling Fan' in response.data
+    assert b'A204-01' in response.data

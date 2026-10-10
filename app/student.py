@@ -37,6 +37,17 @@ def attendance_data(student_id):
     return rows, pct(overall_present, overall_total)
 
 
+def room_asset_data(student):
+    if not student['hostel'] or not student['room_no']:
+        return []
+    return query(
+        "SELECT r.*, a.asset_name,a.asset_code,a.quantity,a.condition_status "
+        "FROM rooms r LEFT JOIN assets a ON a.room_id=r.id "
+        "WHERE r.hostel=%s AND r.room_no=%s",
+        (student['hostel'], student['room_no'])
+    )
+
+
 @bp.route('/')
 @bp.route('/dashboard')
 @login_required
@@ -50,7 +61,8 @@ def dashboard():
     fee = query("SELECT *, GREATEST(total_dues-amount_paid-amount_refunded,0) AS amount_remaining FROM fee_accounts WHERE student_id=%s", (s['id'],), one=True)
     upcoming = query("SELECT * FROM timetable WHERE branch=%s AND year=%s ORDER BY day_of_week,start_time LIMIT 12", (s['branch'],s['year']))
     unread = query(f"SELECT COUNT(*) AS c FROM notices n LEFT JOIN notification_reads nr ON nr.notice_id=n.id AND nr.student_id=%s {target_notice_sql(s)} AND nr.read_at IS NULL", (s['id'],s['batch'],s['branch'],s['year'],s['hostel']), one=True)['c']
-    return render_template('student/dashboard.html', student=s, attendance=attendance, overall=overall, notices=notices, complaints=complaints, requests=requests, fee=fee, upcoming=upcoming, unread=unread)
+    room = room_asset_data(s)
+    return render_template('student/dashboard.html', student=s, attendance=attendance, overall=overall, notices=notices, complaints=complaints, requests=requests, fee=fee, upcoming=upcoming, unread=unread, room=room)
 
 
 @bp.route('/attendance')
@@ -173,7 +185,7 @@ def create_complaint():
 @login_required
 def hostel():
     refresh_aging_complaints()
-    s=current_student(); room=query("SELECT r.*, a.asset_name,a.asset_code,a.quantity,a.condition_status FROM rooms r LEFT JOIN assets a ON a.room_id=r.id WHERE r.hostel=%s AND r.room_no=%s", (s['hostel'],s['room_no']))
+    s=current_student(); room=room_asset_data(s)
     return render_template('student/hostel.html', student=s, room=room)
 
 
