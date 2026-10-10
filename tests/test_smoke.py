@@ -76,6 +76,12 @@ def test_admin_request_and_complaint_pages_render_without_database(monkeypatch):
 
 def test_student_dashboard_shows_assigned_room_and_assets(monkeypatch):
     import app.student as student_module
+    from datetime import date
+
+    class FixedDate(date):
+        @classmethod
+        def today(cls):
+            return cls(2026, 10, 6)
 
     student = {
         'id': 1,
@@ -108,6 +114,7 @@ def test_student_dashboard_shows_assigned_room_and_assets(monkeypatch):
         return None if one else []
 
     monkeypatch.setattr(student_module, 'query', fake_query)
+    monkeypatch.setattr(student_module, 'date', FixedDate)
     monkeypatch.setattr(student_module, 'execute', lambda *args, **kwargs: None)
     monkeypatch.setattr(student_module, 'refresh_aging_complaints', lambda: None)
     monkeypatch.setattr(student_module, 'attendance_data', lambda student_id: ([], 0))
@@ -123,6 +130,8 @@ def test_student_dashboard_shows_assigned_room_and_assets(monkeypatch):
     response = client.get('/student/dashboard')
 
     assert response.status_code == 200
+    assert b'TUESDAY' in response.data
+    assert b'CAMPUS OVERVIEW' in response.data
     assert b'Room &amp; assets' in response.data
     assert b'Boys Hostel A' in response.data
     assert b'A-204' in response.data

@@ -62,7 +62,7 @@ def dashboard():
     upcoming = query("SELECT * FROM timetable WHERE branch=%s AND year=%s ORDER BY day_of_week,start_time LIMIT 12", (s['branch'],s['year']))
     unread = query(f"SELECT COUNT(*) AS c FROM notices n LEFT JOIN notification_reads nr ON nr.notice_id=n.id AND nr.student_id=%s {target_notice_sql(s)} AND nr.read_at IS NULL", (s['id'],s['batch'],s['branch'],s['year'],s['hostel']), one=True)['c']
     room = room_asset_data(s)
-    return render_template('student/dashboard.html', student=s, attendance=attendance, overall=overall, notices=notices, complaints=complaints, requests=requests, fee=fee, upcoming=upcoming, unread=unread, room=room)
+    return render_template('student/dashboard.html', student=s, attendance=attendance, overall=overall, notices=notices, complaints=complaints, requests=requests, fee=fee, upcoming=upcoming, unread=unread, room=room, today=date.today())
 
 
 @bp.route('/attendance')

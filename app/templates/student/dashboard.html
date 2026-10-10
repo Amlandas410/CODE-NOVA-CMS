@@ -2,7 +2,12 @@
 %} {% block content %}
 <div class="hero">
   <div>
-    <div class="eyebrow">SATURDAY · CAMPUS OVERVIEW</div>
+    <div class="eyebrow">
+      <span id="dashboard-weekday"
+        >{{ today.strftime('%A')|upper if today is defined else '' }}</span
+      >
+      · CAMPUS OVERVIEW
+    </div>
     <h1>
       <span
         id="dashboard-greeting"
@@ -217,6 +222,15 @@
 {% endblock %}
 {% block scripts %}
 <script>
+  const weekday = document.getElementById("dashboard-weekday");
+  if (weekday) {
+    weekday.textContent = new Intl.DateTimeFormat(undefined, {
+      weekday: "long",
+    })
+      .format(new Date())
+      .toUpperCase();
+  }
+
   const greeting = document.getElementById("dashboard-greeting");
   if (greeting) {
     const hour = new Date().getHours();
